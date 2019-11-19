@@ -15,8 +15,8 @@ class CreateShipCrewPostsTable extends Migration
     {
         Schema::create('ship_crew_posts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->int('creator_id');
             $table->boolean('is_active');
+            $table->integer('creator_id');
             $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('invite_code', 6)->unique();
             $table->string('description', 255);
