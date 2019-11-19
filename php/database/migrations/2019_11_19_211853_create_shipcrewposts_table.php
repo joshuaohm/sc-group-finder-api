@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateShipcrewpostsTable extends Migration
+class CreateShipCrewPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,13 @@ class CreateShipcrewpostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('shipcrewposts', function (Blueprint $table) {
+        Schema::create('ship_crew_posts', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->index('creator');
+            $table->foreign('creator')->references('id')->on('users')->onDelete('cascade');
+            $table->string('invite_code', 6)->unique();
+            $table->string('description', 255);
+            $table->string('ship', 100);
             $table->timestamps();
         });
     }
@@ -26,6 +31,6 @@ class CreateShipcrewpostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shipcrewposts');
+        Schema::dropIfExists('ship_crew_posts');
     }
 }
