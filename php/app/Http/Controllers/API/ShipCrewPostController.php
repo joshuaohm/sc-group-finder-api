@@ -74,12 +74,12 @@ class ShipCrewPostController extends BaseController
       $shipPositions[$index] = $crewPosObj;
     }
 
-
-    $scPost = ShipCrewPost::create($input);
-
-    $scPost->creator_id = $user->id;
-    $scPost->members = json_encode($shipPositions, true);
-    $scPost->save();
+    $scPost = ShipCrewPost::create([
+      'description' => htmlspecialchars($input['description']),
+      'ship_id'     => $postedShip->id,
+      'creator_id'  => $user->id,
+      'members'     => json_encode($shipPositions, true),
+    ]);
 
     return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
   }
