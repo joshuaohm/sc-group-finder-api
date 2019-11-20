@@ -16,105 +16,56 @@ class ShipsTableSeeder extends Seeder
       \App\Ship::insert([
         'manufacturer' => 'Aegis',
         'name' => 'Avenger Stalker',
-        'crewPositions' => 
-        "
-          [
-            '0': 
-            {
-              'type':'pilot'
-            },
-          ]
-        ",
+        'crewPositions' => json_encode(array(
+          json_encode( array( "type" => "pilot"))
+        )),
       ]);
 
       \App\Ship::insert([
         'manufacturer' => 'Aegis',
         'name' => 'Avenger Titan',
-        'crewPositions' => json_decode(
-          "[
-            {
-              type: 'pilot'
-            }
-          ]"
-        , true),
+        'crewPositions' => json_encode(array(
+          json_encode( array( "type" => "pilot"))
+        )),
       ]);
 
       \App\Ship::insert([
         'manufacturer' => 'Aegis',
         'name' => 'Avenger Warlock',
-        'crewPositions' => json_decode(
-          "[
-            {
-              type: 'pilot'
-            }
-          ]"
-        , true),
+        'crewPositions' => json_encode(array(
+          json_encode( array( "type" => "pilot"))
+        )),
       ]);
 
       \App\Ship::insert([
         'manufacturer' => 'Aegis',
         'name' => 'Eclipse',
-        'crewPositions' => json_decode(
-          "[
-            {
-              type: 'pilot'
-            }
-          ]"
-        , true),
+        'crewPositions' => json_encode(array(
+          json_encode( array( "type" => "pilot"))
+        )),
       ]);
 
       \App\Ship::insert([
         'manufacturer' => 'Aegis',
         'name' => 'Gladius',
-        'crewPositions' => json_decode(
-          "[
-            {
-              type: 'pilot'
-            }
-          ]"
-        , true),
+        'crewPositions' => json_encode(array(
+          json_encode( array( "type" => "pilot"))
+        )),
       ]);
 
       \App\Ship::insert([
         'manufacturer' => 'Aegis',
         'name' => 'Hammerhead',
-        'crewPositions' => json_decode(
-          "[
-            {
-              type: 'pilot'
-            },
-            {
-              type: 'co-pilot'
-            },
-            {
-              type: 'pilot'
-            },
-            {
-              type: 'turret',
-              position: 'FrontLeft',
-            },
-            {
-              type: 'turret',
-              position: 'FrontRight',
-            },
-            {
-              type: 'turret',
-              position: 'BackLeft',
-            },
-            {
-              type: 'turret',
-              position: 'BackRight',
-            },
-            {
-              type: 'turret',
-              position: 'Top',
-            },
-            {
-              type: 'turret',
-              position: 'Bottom',
-            }
-          ]"
-        , true),
+        'crewPositions' => json_encode(array(
+          json_encode( array( "type" => "pilot")),
+          json_encode( array( "type" => "co-pilot")),
+          json_encode( array( "type" => "turret"), array("position" => "frontLeft")),
+          json_encode( array( "type" => "turret"), array("position" => "frontRight")),
+          json_encode( array( "type" => "turret"), array("position" => "backLeft")),
+          json_encode( array( "type" => "turret"), array("position" => "backRight")),
+          json_encode( array( "type" => "turret"), array("position" => "top")),
+          json_encode( array( "type" => "turret"), array("position" => "bottom"))
+        )),
       ]);
     }
 }
