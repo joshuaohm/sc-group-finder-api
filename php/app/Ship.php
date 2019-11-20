@@ -11,5 +11,7 @@ class Ship extends Model
    *
    * @var array
    */
-  protected $fillable = [];
+  protected $fillable = [
+    "manufacturer", "name", "crewPositions"
+  ];
 }
