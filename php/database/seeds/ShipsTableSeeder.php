@@ -14,7 +14,7 @@ class ShipsTableSeeder extends Seeder
     {
 
       \App\Ship::insert([
-        'manufacturer' => 'Aegis'
+        'manufacturer' => 'Aegis',
         'name' => 'Avenger Stalker',
         'crewPositions' => json_decode(
           "[
@@ -26,7 +26,7 @@ class ShipsTableSeeder extends Seeder
       ]);
 
       \App\Ship::insert([
-        'manufacturer' => 'Aegis'
+        'manufacturer' => 'Aegis',
         'name' => 'Avenger Titan',
         'crewPositions' => json_decode(
           "[
@@ -38,7 +38,7 @@ class ShipsTableSeeder extends Seeder
       ]);
 
       \App\Ship::insert([
-        'manufacturer' => 'Aegis'
+        'manufacturer' => 'Aegis',
         'name' => 'Avenger Warlock',
         'crewPositions' => json_decode(
           "[
@@ -50,7 +50,7 @@ class ShipsTableSeeder extends Seeder
       ]);
 
       \App\Ship::insert([
-        'manufacturer' => 'Aegis'
+        'manufacturer' => 'Aegis',
         'name' => 'Eclipse',
         'crewPositions' => json_decode(
           "[
@@ -62,7 +62,7 @@ class ShipsTableSeeder extends Seeder
       ]);
 
       \App\Ship::insert([
-        'manufacturer' => 'Aegis'
+        'manufacturer' => 'Aegis',
         'name' => 'Gladius',
         'crewPositions' => json_decode(
           "[
@@ -74,7 +74,7 @@ class ShipsTableSeeder extends Seeder
       ]);
 
       \App\Ship::insert([
-        'manufacturer' => 'Aegis'
+        'manufacturer' => 'Aegis',
         'name' => 'Hammerhead',
         'crewPositions' => json_decode(
           "[
