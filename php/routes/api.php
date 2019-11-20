@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('register', 'API\RegisterController@register');
-Route::post('login', 'API\RegisterController@login');
+Route::post('/register', 'Api\RegisterController@register');
+Route::post('/login', 'Api\RegisterController@login');
    
 Route::middleware('auth:api')->group( function () {
-    Route::resource('ship_crew_posts', 'API\ShipCrewPostController');
+    Route::resource('ship_crew_posts', 'Api\ShipCrewPostController');
 });
