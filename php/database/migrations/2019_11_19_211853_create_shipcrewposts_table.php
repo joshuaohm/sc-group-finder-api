@@ -19,12 +19,14 @@ class CreateShipCrewPostsTable extends Migration
             $table->bigInteger('creator_id')->unsigned();
             $table->string('invite_code', 6)->unique();
             $table->string('description', 255);
-            $table->string('ship', 100);
+            $table->bigInteger('ship_id')->unsigned();
+            $table->json('members');
             $table->timestamps();
         });
 
         Schema::table('ship_crew_posts', function($table) {
             $table->foreign('creator_id')->references('id')->on('users');
+	    $table->foreign('ship_id')->references('id')->on('ships');
         });
     }
 
