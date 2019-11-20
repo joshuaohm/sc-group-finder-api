@@ -15,10 +15,9 @@ class CreateShipsTable extends Migration
     {
         Schema::create('ships', function (Blueprint $table) {
             $table->bigIncrements('id');
-	    $table->string('manufacturer', 100);
-	    $table->string('name', 100);
-	    $table->json('crewPositions');
-	    $table->integer('passengerSeats')->default(0);
+            $table->string('manufacturer', 100);
+            $table->string('name', 100);
+            $table->json('crewPositions');
             $table->timestamps();
         });
     }

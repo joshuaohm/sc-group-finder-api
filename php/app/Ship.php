@@ -12,6 +12,6 @@ class ShipCrewPost extends Model
      * @var array
      */
     protected $fillable = [
-        'description',
+        
     ];
 }
