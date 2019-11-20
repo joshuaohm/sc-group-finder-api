@@ -17,7 +17,7 @@ class ShipCrewPostController extends BaseController
    */
   public function index()
   {
-      $scPosts = ShipCrewPosts::where('is_active', true);
+      $scPosts = ShipCrewPost::where('is_active', true);
   
       return $this->sendResponse(ShipCrewPostResource::collection($scPosts), 'Ship Crew Posts retrieved successfully.');
   }
