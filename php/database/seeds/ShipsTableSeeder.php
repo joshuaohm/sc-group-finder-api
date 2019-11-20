@@ -16,13 +16,14 @@ class ShipsTableSeeder extends Seeder
       \App\Ship::insert([
         'manufacturer' => 'Aegis',
         'name' => 'Avenger Stalker',
-        'crewPositions' => json_decode(
-          "[
-            {
-              type: 'pilot'
-            }
-          ]"
-        , true),
+        'crewPositions' => 
+          "
+            [
+              {
+                type: 'pilot'
+              }
+            ]
+        ",
       ]);
 
       \App\Ship::insert([
