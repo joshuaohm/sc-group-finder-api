@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\ShipCrewPost;
+use App\User;
 use Validator;
 use App\Http\Resources\ShipCrewPost as ShipCrewPostResource;
    
@@ -33,7 +34,6 @@ class ShipCrewPostController extends BaseController
       $input = $request->all();
   
       $validator = Validator::make($input, [
-          'creator_id' => 'required',
           'description' => 'required',
           'ship' => 'required'
       ]);
@@ -41,9 +41,17 @@ class ShipCrewPostController extends BaseController
       if($validator->fails()){
           return $this->sendError('Validation Error.', $validator->errors());       
       }
+
+      $user = auth()->guard('api')->user();
+
+      if(!$user || !$user->id){
+        return $this->sendError('Validation Error.', "Poster information was missing.");   
+      }
+
   
       $scPost = ShipCrewPost::create($input);
 
+      $scPost->creator_id($user->id);
       $scPost->isActive = true;
       $scPost->save();
   
