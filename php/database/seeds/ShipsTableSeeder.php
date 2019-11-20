@@ -22,7 +22,7 @@ class ShipsTableSeeder extends Seeder
               type: 'pilot'
             }
           ]"
-        , true);
+        , true),
       ]);
 
       \App\Ship::insert([
@@ -34,7 +34,7 @@ class ShipsTableSeeder extends Seeder
               type: 'pilot'
             }
           ]"
-        , true);
+        , true),
       ]);
 
       \App\Ship::insert([
@@ -46,7 +46,7 @@ class ShipsTableSeeder extends Seeder
               type: 'pilot'
             }
           ]"
-        , true);
+        , true),
       ]);
 
       \App\Ship::insert([
@@ -58,7 +58,7 @@ class ShipsTableSeeder extends Seeder
               type: 'pilot'
             }
           ]"
-        , true);
+        , true),
       ]);
 
       \App\Ship::insert([
@@ -70,7 +70,7 @@ class ShipsTableSeeder extends Seeder
               type: 'pilot'
             }
           ]"
-        , true);
+        , true),
       ]);
 
       \App\Ship::insert([
@@ -112,7 +112,7 @@ class ShipsTableSeeder extends Seeder
               position: 'Bottom',
             }
           ]"
-        , true);
+        , true),
       ]);
     }
 }
