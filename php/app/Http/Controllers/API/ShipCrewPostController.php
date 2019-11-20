@@ -62,13 +62,14 @@ class ShipCrewPostController extends BaseController
     foreach ($shipPositions as $index => $crewPosition) {
 
       $crewPosObj = json_decode($crewPosition);
+      $crewPosObj->enabled = true;
 
-      if ($postedMembers[$index]->member === "this") {
-        $crewPosObj->member = $user->id;
-        $crewPosObj->enabled = true;
-      } else if ($postedMembers[$index]->member === "none") {
+      if ($postedMembers[$index]->member === "none") {
         $crewPosObj->member = 0;
         $crewPosObj->enabled = false;
+      }
+      else if ($postedMembers[$index]->member === "this") {
+        $crewPosObj->member = $user->id;
       }
 
       $shipPositions[$index] = $crewPosObj;
