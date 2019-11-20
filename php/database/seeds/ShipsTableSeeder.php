@@ -59,12 +59,12 @@ class ShipsTableSeeder extends Seeder
         'crewPositions' => json_encode(array(
           json_encode( array( "type" => "pilot")),
           json_encode( array( "type" => "co-pilot")),
-          json_encode( array( "type" => "turret"), array("position" => "frontLeft")),
-          json_encode( array( "type" => "turret"), array("position" => "frontRight")),
-          json_encode( array( "type" => "turret"), array("position" => "backLeft")),
-          json_encode( array( "type" => "turret"), array("position" => "backRight")),
-          json_encode( array( "type" => "turret"), array("position" => "top")),
-          json_encode( array( "type" => "turret"), array("position" => "bottom"))
+          json_encode( array( "type" => "turret", "position" => "frontLeft")),
+          json_encode( array( "type" => "turret", "position" => "frontRight")),
+          json_encode( array( "type" => "turret", "position" => "backLeft")),
+          json_encode( array( "type" => "turret", "position" => "backRight")),
+          json_encode( array( "type" => "turret", "position" => "top")),
+          json_encode( array( "type" => "turret", "position" => "bottom"))
         )),
       ]);
     }
