@@ -17,7 +17,7 @@ class ShipsTableSeeder extends Seeder
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Stalker',
       'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"))
+        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
       )),
     ]);
 
@@ -25,7 +25,7 @@ class ShipsTableSeeder extends Seeder
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Titan',
       'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"))
+        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
       )),
     ]);
 
@@ -33,7 +33,7 @@ class ShipsTableSeeder extends Seeder
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Warlock',
       'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"))
+        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
       )),
     ]);
 
@@ -41,7 +41,7 @@ class ShipsTableSeeder extends Seeder
       'manufacturer' => 'Aegis',
       'name' => 'Eclipse',
       'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"))
+        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
       )),
     ]);
 
@@ -49,7 +49,7 @@ class ShipsTableSeeder extends Seeder
       'manufacturer' => 'Aegis',
       'name' => 'Gladius',
       'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"))
+        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
       )),
     ]);
 
@@ -57,14 +57,14 @@ class ShipsTableSeeder extends Seeder
       'manufacturer' => 'Aegis',
       'name' => 'Hammerhead',
       'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot")),
-        json_encode(array("type" => "co-pilot")),
-        json_encode(array("type" => "turret", "position" => "frontLeft")),
-        json_encode(array("type" => "turret", "position" => "frontRight")),
-        json_encode(array("type" => "turret", "position" => "backLeft")),
-        json_encode(array("type" => "turret", "position" => "backRight")),
-        json_encode(array("type" => "turret", "position" => "top")),
-        json_encode(array("type" => "turret", "position" => "bottom"))
+        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES),
+        json_encode(array("type" => "co-pilot"), JSON_UNESCAPED_SLASHES),
+        json_encode(array("type" => "turret", "position" => "frontLeft"), JSON_UNESCAPED_SLASHES),
+        json_encode(array("type" => "turret", "position" => "frontRight"), JSON_UNESCAPED_SLASHES),
+        json_encode(array("type" => "turret", "position" => "backLeft"), JSON_UNESCAPED_SLASHES),
+        json_encode(array("type" => "turret", "position" => "backRight"), JSON_UNESCAPED_SLASHES),
+        json_encode(array("type" => "turret", "position" => "top"), JSON_UNESCAPED_SLASHES),
+        json_encode(array("type" => "turret", "position" => "bottom"), JSON_UNESCAPED_SLASHES)
       )),
     ]);
   }
