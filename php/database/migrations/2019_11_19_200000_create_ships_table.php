@@ -6,29 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateShipsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('ships', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('manufacturer', 100);
-            $table->string('name', 100);
-            $table->json('crewPositions');
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('ships', function (Blueprint $table) {
+      $table->bigIncrements('id');
+      $table->string('manufacturer', 100);
+      $table->string('name', 100);
+      $table->json('crewPositions');
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('ships');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('ships');
+  }
 }

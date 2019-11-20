@@ -1,14 +1,15 @@
 <?php
-   
+
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\ShipCrewPost;
+use App\Ship;
 use App\User;
 use Validator;
 use App\Http\Resources\ShipCrewPost as ShipCrewPostResource;
-   
+
 class ShipCrewPostController extends BaseController
 {
   /**
@@ -18,9 +19,9 @@ class ShipCrewPostController extends BaseController
    */
   public function index()
   {
-      $scPosts = ShipCrewPost::where('is_active', true)->get();
-  
-      return $this->sendResponse(ShipCrewPostResource::collection($scPosts), 'Ship Crew Posts retrieved successfully.');
+    $scPosts = ShipCrewPost::where('is_active', true)->get();
+
+    return $this->sendResponse(ShipCrewPostResource::collection($scPosts), 'Ship Crew Posts retrieved successfully.');
   }
 
   /**
@@ -31,31 +32,56 @@ class ShipCrewPostController extends BaseController
    */
   public function store(Request $request)
   {
-      $input = $request->all();
-  
-      $validator = Validator::make($input, [
-          'description' => 'required',
-          'ship' => 'required'
-      ]);
-  
-      if($validator->fails()){
-          return $this->sendError('Validation Error.', $validator->errors());       
+    $input = $request->all();
+
+    $validator = Validator::make($input, [
+      'description' => 'required',
+      'ship_id' => 'required|numeric|min:1',
+      'members' => 'required'
+    ]);
+
+    if ($validator->fails()) {
+      return $this->sendError('Validation Error.', $validator->errors());
+    }
+
+    $user = auth()->guard('api')->user();
+
+    if (!$user || !$user->id) {
+      return $this->sendError('Validation Error.', "Poster information was missing.");
+    }
+
+    $postedMembers = json_decode($input['members']);
+    $postedShip = Ship::where('id', htmlspecialchars($input['ship_id']))->first();
+    $shipPositions = json_decode($postedShip->crewPositions, true);
+
+    if (!$postedMembers || !$postedShip || !$shipPositions) {
+      return $this->sendError('Validation Error.', "Ship information was missing.");
+    }
+
+    //Disable crewPositions or set creator to position
+    foreach ($shipPositions as $index => $crewPosition) {
+
+      $crewPosObj = json_decode($crewPosition);
+
+      if ($postedMembers[$index]->member === "this") {
+        $crewPosObj->member = $user->id;
+        $crewPosObj->enabled = true;
+      } else if ($postedMembers[$index]->member === "none") {
+        $crewPosObj->member = 0;
+        $crewPosObj->enabled = false;
       }
 
-      $user = auth()->guard('api')->user();
+      $shipPositions[$index] = $crewPosObj;
+    }
 
-      if(!$user || !$user->id){
-        return $this->sendError('Validation Error.', "Poster information was missing.");   
-      }
 
-  
-      $scPost = ShipCrewPost::create($input);
+    $scPost = ShipCrewPost::create($input);
 
-      $scPost->creator_id($user->id);
-      $scPost->isActive = true;
-      $scPost->save();
-  
-      return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
+    $scPost->creator_id = $user->id;
+    $scPost->members = json_encode($shipPositions, true);
+    $scPost->save();
+
+    return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
   }
 
   /**
@@ -66,13 +92,13 @@ class ShipCrewPostController extends BaseController
    */
   public function show($id)
   {
-      $scPost = ShipCrewPost::find($id);
+    $scPost = ShipCrewPost::find($id);
 
-      if (is_null($scPost)) {
-          return $this->sendError('Ship Crew Post not found.');
-      }
-  
-      return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post retrieved successfully.');
+    if (is_null($scPost)) {
+      return $this->sendError('Ship Crew Post not found.');
+    }
+
+    return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post retrieved successfully.');
   }
 
   /**
@@ -84,22 +110,22 @@ class ShipCrewPostController extends BaseController
    */
   public function update(Request $request, ShipCrewPost $scPost)
   {
-      $input = $request->all();
-  
-      $validator = Validator::make($input, [
-        'description' => 'required',
-        'ship' => 'required'
-      ]);
-  
-      if($validator->fails()){
-          return $this->sendError('Validation Error.', $validator->errors());       
-      }
-  
-      $scPost->description = $input['description'];
-      $scPost->ship = $input['ship'];
-      $scPost->save();
-  
-      return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post updated successfully.');
+    $input = $request->all();
+
+    $validator = Validator::make($input, [
+      'description' => 'required',
+      'ship' => 'required'
+    ]);
+
+    if ($validator->fails()) {
+      return $this->sendError('Validation Error.', $validator->errors());
+    }
+
+    $scPost->description = $input['description'];
+    $scPost->ship = $input['ship'];
+    $scPost->save();
+
+    return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post updated successfully.');
   }
 
   /**
@@ -110,9 +136,9 @@ class ShipCrewPostController extends BaseController
    */
   public function destroy(ShipCrewPost $scPost)
   {
-      $scPost->isActive = false;
-      $scPost->save();
-  
-      return $this->sendResponse([], 'Ship Crew Post deleted successfully.');
+    $scPost->isActive = false;
+    $scPost->save();
+
+    return $this->sendResponse([], 'Ship Crew Post deleted successfully.');
   }
 }
