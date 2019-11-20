@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Ship;
 
-class ShipCrewPostController extends BaseController
+class ShipController extends BaseController
 {
   /**
    * Display a listing of the resource.
