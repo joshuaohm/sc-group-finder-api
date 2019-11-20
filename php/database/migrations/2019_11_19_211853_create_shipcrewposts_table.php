@@ -16,8 +16,8 @@ class CreateShipCrewPostsTable extends Migration
     Schema::create('ship_crew_posts', function (Blueprint $table) {
       $table->bigIncrements('id');
       $table->boolean('isActive')->default(true);
-      $table->bigInteger('creator_id')->unsigned();
-      $table->bigInteger('ship_id')->unsigned();
+      $table->bigInteger('creator_id')->unsigned()->default(0);
+      $table->bigInteger('ship_id')->unsigned()->default(0);
       $table->string('inviteCode', 6)->unique()->nullable();
       $table->string('description', 255);
       $table->integer('miscCrew')->default(0);
