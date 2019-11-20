@@ -17,12 +17,14 @@ class ShipsTableSeeder extends Seeder
         'manufacturer' => 'Aegis',
         'name' => 'Avenger Stalker',
         'crewPositions' => 
-          "
-            [
+        "
+          {
+            seats: [
               {
                 type: 'pilot'
               }
             ]
+          }
         ",
       ]);
 
