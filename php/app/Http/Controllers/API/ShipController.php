@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Ship;
+use App\Http\Resources\Ship as ShipResource;
 
 class ShipController extends BaseController
 {
