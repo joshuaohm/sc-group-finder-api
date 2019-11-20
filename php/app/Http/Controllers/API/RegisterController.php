@@ -10,6 +10,8 @@ use Validator;
    
 class RegisterController extends BaseController
 {
+  public $successStatus = 200;
+  
     /**
      * Register api
      *
