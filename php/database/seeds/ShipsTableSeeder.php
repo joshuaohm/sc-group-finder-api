@@ -18,13 +18,12 @@ class ShipsTableSeeder extends Seeder
         'name' => 'Avenger Stalker',
         'crewPositions' => 
         "
-          {
-            'positions': [
-              {
-                'type':'pilot'
-              }
-            ]
-          }
+          [
+            '0': 
+            {
+              'type':'pilot'
+            },
+          ]
         ",
       ]);
 
