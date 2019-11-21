@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Ship;
+use App\Http\Resources\ShipResource as ShipResource;
 
 class ShipCrewPost extends JsonResource
 {
@@ -17,7 +19,9 @@ class ShipCrewPost extends JsonResource
         return [
             'id' => $this->id,
             'description' => $this->description,
-            'ship' => $this->ship,
+            'ship' => new ShipResource(Ship::where('id', $this->ship_id)->get()),
+            'members' => $this->members,
+            'miscCrew' => $this->miscCrew,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];
