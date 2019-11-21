@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Ship;
-use App\Http\Resources\ShipResource as ShipResource;
+use App\Http\Resources\Ship as ShipResource;
 
 class ShipCrewPost extends JsonResource
 {
