@@ -61,18 +61,17 @@ class ShipCrewPostController extends BaseController
     //Disable crewPositions or set creator to position
     foreach ($shipPositions as $index => $crewPosition) {
 
-      $crewPosObj = json_decode($crewPosition);
-      $crewPosObj->enabled = true;
+      $crewPosition['enabled'] = true;
 
-      if ($postedMembers[$index]->member === "none") {
-        $crewPosObj->member = 0;
-        $crewPosObj->enabled = false;
+      if (isset($postedMembers[$index]->member) && $postedMembers[$index]->member === "none") {
+        $crewPosition['member'] = 0;
+        $crewPosition['enabled'] = false;
       }
-      else if ($postedMembers[$index]->member === "this") {
-        $crewPosObj->member = $user->id;
+      else if (isset($postedMembers[$index]->member) && $postedMembers[$index]->member === "this") {
+        $crewPosition['member']  = $user->id;
       }
 
-      $shipPositions[$index] = $crewPosObj;
+      $shipPositions[$index] = $crewPosition;
     }
 
     $scPost = ShipCrewPost::create([

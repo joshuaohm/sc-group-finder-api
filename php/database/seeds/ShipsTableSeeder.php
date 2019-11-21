@@ -16,56 +16,46 @@ class ShipsTableSeeder extends Seeder
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Stalker',
-      'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
-      )),
+      'crewPositions' => json_encode(['type' => 'pilot']),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Titan',
-      'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
-      )),
+      'crewPositions' => json_encode(['type' => 'pilot']),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Warlock',
-      'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
-      )),
+      'crewPositions' => json_encode(['type' => 'pilot']),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Eclipse',
-      'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
-      )),
+      'crewPositions' => json_encode(['type' => 'pilot']),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Gladius',
-      'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES)
-      )),
+      'crewPositions' => json_encode(['type' => 'pilot']),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Hammerhead',
-      'crewPositions' => json_encode(array(
-        json_encode(array("type" => "pilot"), JSON_UNESCAPED_SLASHES),
-        json_encode(array("type" => "co-pilot"), JSON_UNESCAPED_SLASHES),
-        json_encode(array("type" => "turret", "position" => "frontLeft"), JSON_UNESCAPED_SLASHES),
-        json_encode(array("type" => "turret", "position" => "frontRight"), JSON_UNESCAPED_SLASHES),
-        json_encode(array("type" => "turret", "position" => "backLeft"), JSON_UNESCAPED_SLASHES),
-        json_encode(array("type" => "turret", "position" => "backRight"), JSON_UNESCAPED_SLASHES),
-        json_encode(array("type" => "turret", "position" => "top"), JSON_UNESCAPED_SLASHES),
-        json_encode(array("type" => "turret", "position" => "bottom"), JSON_UNESCAPED_SLASHES)
-      )),
+      'crewPositions' => json_encode([
+        ['type' => 'pilot'],
+        ['type' => 'co-pilot'],
+        ['type' => 'turret', 'position' => 'frontLeft'],
+        ['type' => 'turret', 'position' => 'frontRight'],
+        ['type' => 'turret', 'position' => 'backLeft'],
+        ['type' => 'turret', 'position' => 'backRight'],
+        ['type' => 'turret', 'position' => 'top'],
+        ['type' => 'turret', 'position' => 'bottom'],
+      ]),
     ]);
   }
 }
