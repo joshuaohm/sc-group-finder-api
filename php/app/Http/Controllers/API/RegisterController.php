@@ -48,7 +48,7 @@ class RegisterController extends BaseController
   {
     if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
       $user = Auth::user();
-      $success['token'] =  $user->createToken('MyApp')->accessToken;
+      $success['token'] =  $user->createToken('SCGF')->accessToken;
 
       Cookie::queue('scgf-token', $success['token'] , 60 * 24);
 
@@ -65,14 +65,20 @@ class RegisterController extends BaseController
    */
   public function logOut(Request $request){
 
-    DB::table('oauth_access_tokens')
+    if(Auth::user()){
+
+      DB::table('oauth_access_tokens')
       ->where('user_id', Auth::user()->id)
       ->update([
         'revoked' => true
       ]);
 
-    $success['token'] = '';
+      $success['token'] = '';
 
-    return $this->sendResponse($success, 'User logged out successfully.');
+      return $this->sendResponse($success, 'User logged out successfully.');
+    }
+    else
+      return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+
   }
 }
