@@ -63,7 +63,13 @@ class RegisterController extends BaseController
    * @return \Illuminate\Http\Response
    */
   public function logOut(Request $request){
-    Auth::logOut();
+
+    DB::table('oauth_access_tokens')
+      ->where('user_id', Auth::user()->id)
+      ->update([
+        'revoked' => true
+      ]);
+
     $success['token'] = '';
 
     return $this->sendResponse($success, 'User logged out successfully.');
