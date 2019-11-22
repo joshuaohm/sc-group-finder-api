@@ -46,11 +46,15 @@ class RegisterController extends BaseController
    */
   public function login(Request $request)
   {
-    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+    //User is already logged in
+    if(Auth::user()){
+      $success['token'] = $request->bearerToken();
+      return $this->sendResponse($success, 'User login successfully.');
+    }
+    //User is not logged in yet
+    else if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
       $user = Auth::user();
       $success['token'] =  $user->createToken('SCGF')->accessToken;
-
-      Cookie::queue('scgf-token', $success['token'] , 60 * 24);
 
       return $this->sendResponse($success, 'User login successfully.');
     } else {
