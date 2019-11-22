@@ -16,6 +16,7 @@ Route::middleware('cors')->group(function () {
 
   Route::post('/register', 'API\RegisterController@register');
   Route::post('/login', 'API\RegisterController@login');
+  Route::post('/logout', 'API\RegisterController@logOut');
 
   Route::middleware('auth:api')->group(function () {
     Route::resource('posts/shipcrews', 'API\ShipCrewPostController');

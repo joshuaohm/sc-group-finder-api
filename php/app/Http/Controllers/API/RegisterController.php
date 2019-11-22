@@ -56,4 +56,16 @@ class RegisterController extends BaseController
       return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
     }
   }
+
+  /**
+   * Login api
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function logOut(Request $request){
+    Auth::logOut();
+    $success['token'] = '';
+
+    return $this->sendResponse($success, 'User logged out successfully.');
+  }
 }
