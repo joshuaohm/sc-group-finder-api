@@ -22,6 +22,7 @@ Route::middleware('cors')->group(function () {
     Route::resource('posts/shipcrews', 'API\ShipCrewPostController');
     Route::resource('ships', 'API\ShipController');
     Route::post('/logout', 'API\RegisterController@logOut');
+    Route::post('/logincheck', 'API\RegisterController@loginCheck');
   });
 
 });

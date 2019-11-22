@@ -62,8 +62,25 @@ class RegisterController extends BaseController
     }
   }
 
+   /**
+   * LoginCheck api
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function loginCheck(Request $request)
+  {
+    if(Auth::user()){
+
+      $success['token'] = $request->bearerToken();
+
+      return $this->sendResponse($success, 'User is logged in.');
+    }
+    else
+      return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+  }
+
   /**
-   * Login api
+   * LogOut api
    *
    * @return \Illuminate\Http\Response
    */
