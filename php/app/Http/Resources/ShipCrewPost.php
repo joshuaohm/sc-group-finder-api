@@ -19,7 +19,7 @@ class ShipCrewPost extends JsonResource
         return [
             'id' => $this->id,
             'description' => $this->description,
-            'ship' => new ShipResource(Ship::where('id', $this->ship_id)->get()),
+            'ship' => new ShipResource(Ship::where('id', $this->ship_id)->first()),
             'members' => $this->members,
             'miscCrew' => $this->miscCrew,
             'created_at' => $this->created_at->format('d/m/Y'),
