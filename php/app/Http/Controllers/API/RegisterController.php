@@ -71,7 +71,7 @@ class RegisterController extends BaseController
   {
     if($user = Auth::user()){
 
-      $success['token'] = $user->accessToken;
+      $success['token'] = $request->bearerToken();
 
       return $this->sendResponse($success, 'User is logged in.');
     }
