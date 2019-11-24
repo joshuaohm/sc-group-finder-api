@@ -12,6 +12,41 @@ use App\Http\Resources\ShipCrewPost as ShipCrewPostResource;
 
 class ShipCrewPostController extends BaseController
 {
+
+  private function createPositions($template, $requested, $userId)
+  {
+
+    //Disable crewPositions or set creator to position
+    foreach ($template as $index => $crewPosition) {
+
+      $crewPosition['enabled'] = true;
+
+      if (isset($requested[$index]->member) && $requested[$index]->member === "none") {
+        $crewPosition['member'] = 0;
+        $crewPosition['enabled'] = false;
+      } else if (isset($requested[$index]->member) && $requested[$index]->member === "this") {
+        $crewPosition['member']  = $userId;
+      }
+
+      $template[$index] = $crewPosition;
+    }
+
+    return $template;
+  }
+
+  private function createMiscCrewPositions($miscCrew)
+  {
+    $temp = [];
+
+    for ($i = 0; $i < $miscCrew; $i++) {
+
+      $obj = ["member" => 0];
+      array_push($temp, $obj);
+    }
+
+    return $temp;
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -34,6 +69,7 @@ class ShipCrewPostController extends BaseController
   {
     $input = $request->all();
 
+    /* Input Validation */
     $validator = Validator::make($input, [
       'description' => 'required',
       'ship_id' => 'required|numeric|min:1',
@@ -44,12 +80,15 @@ class ShipCrewPostController extends BaseController
       return $this->sendError('Validation Error.', $validator->errors());
     }
 
+    /* User Validation */
+
     $user = auth()->guard('api')->user();
 
     if (!$user || !$user->id) {
       return $this->sendError('Validation Error.', "Poster information was missing.");
     }
 
+    /* Create Ship Crew Positions */
     $postedMembers = json_decode($input['members']);
     $postedShip = Ship::where('id', htmlspecialchars($input['ship_id']))->first();
     $shipPositions = json_decode($postedShip->crewPositions, true);
@@ -58,27 +97,16 @@ class ShipCrewPostController extends BaseController
       return $this->sendError('Validation Error.', "Ship information was missing.");
     }
 
-    //Disable crewPositions or set creator to position
-    foreach ($shipPositions as $index => $crewPosition) {
+    $shipPositions = createPositions($shipPositions, $postedMembers, $user->id);
 
-      $crewPosition['enabled'] = true;
-
-      if (isset($postedMembers[$index]->member) && $postedMembers[$index]->member === "none") {
-        $crewPosition['member'] = 0;
-        $crewPosition['enabled'] = false;
-      }
-      else if (isset($postedMembers[$index]->member) && $postedMembers[$index]->member === "this") {
-        $crewPosition['member']  = $user->id;
-      }
-
-      $shipPositions[$index] = $crewPosition;
-    }
+    $miscCrew = createMiscCrewPositions($input['miscCrew']);
 
     $scPost = ShipCrewPost::create([
       'description' => htmlspecialchars($input['description']),
       'ship_id'     => $postedShip->id,
       'creator_id'  => $user->id,
       'members'     => json_encode($shipPositions, true),
+      'miscCrew'    => json_encode($miscCrew, true)
     ]);
 
     return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');

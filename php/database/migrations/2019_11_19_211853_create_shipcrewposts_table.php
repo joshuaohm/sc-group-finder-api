@@ -20,7 +20,7 @@ class CreateShipCrewPostsTable extends Migration
       $table->bigInteger('ship_id')->unsigned()->default(0);
       $table->string('inviteCode', 6)->unique()->nullable();
       $table->string('description', 255);
-      $table->integer('miscCrew')->default(0);
+      $table->json('miscCrew')->nullable();
       $table->json('members')->nullable();
       $table->timestamps();
     });
