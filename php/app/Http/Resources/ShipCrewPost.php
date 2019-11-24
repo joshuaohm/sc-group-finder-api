@@ -24,9 +24,7 @@ class ShipCrewPost extends JsonResource
 
       if ($position->member > 0)
         $filled++;
-    }
 
-    //Todo: miscCrew logic
     foreach ($miscCrew as $key => $position) {
       if ($position->member > 0)
         $filled++;
