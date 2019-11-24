@@ -22,7 +22,6 @@ class ShipCrewPostController extends BaseController
       $crewPosition['enabled'] = true;
 
       if (isset($requested[$index]->member) && $requested[$index]->member === "none") {
-        $crewPosition['member'] = 0;
         $crewPosition['enabled'] = false;
       } else if (isset($requested[$index]->member) && $requested[$index]->member === "this") {
         $crewPosition['member']  = $userId;
@@ -36,12 +35,11 @@ class ShipCrewPostController extends BaseController
 
   private function createMiscCrewPositions($miscCrew)
   {
-    $temp = [];
+    $temp = null;
 
     for ($i = 0; $i < $miscCrew; $i++) {
-
-      $obj = ["member" => 0];
-      array_push($temp, $obj);
+      $new['member'] = 0;
+      $temp[$i] = $new;
     }
 
     return $temp;
@@ -97,9 +95,9 @@ class ShipCrewPostController extends BaseController
       return $this->sendError('Validation Error.', "Ship information was missing.");
     }
 
-    $shipPositions = createPositions($shipPositions, $postedMembers, $user->id);
+    $shipPositions = $this->createPositions($shipPositions, $postedMembers, $user->id);
 
-    $miscCrew = createMiscCrewPositions($input['miscCrew']);
+    $miscCrew = $this->createMiscCrewPositions($input['miscCrew']);
 
     $scPost = ShipCrewPost::create([
       'description' => htmlspecialchars($input['description']),

@@ -12,6 +12,6 @@ class ShipCrewPost extends Model
    * @var array
    */
   protected $fillable = [
-    'description', 'ship_id', 'creator_id', 'members',
+    'description', 'ship_id', 'creator_id', 'members', 'miscCrew'
   ];
 }

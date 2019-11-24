@@ -12,26 +12,26 @@ class ShipCrewPost extends JsonResource
     * Returns a string to indicate how many crewPositions are available in the post.
     *
     */
-  public function calculateAvailableSlots($members, $miscCrew)
+  private function calculateAvailableSlots($members, $miscCrew)
   {
     $total = 0;
     $filled = 0;
 
-    foreach ($members as $key => $position) {
+    foreach (json_decode($members) as $position) {
 
       if ($position->enabled)
         $total++;
 
-      if ($position->member > 0)
+      if (isset($position->member) && $position->member > 0)
         $filled++;
     }
-    foreach ($miscCrew as $key => $position) {
+    foreach (json_decode($miscCrew) as $position) {
       if ($position->member > 0)
         $filled++;
 
       $total++;
     }
-    return $filled . ":" . $total;
+    return $filled . "/" . $total;
   }
 
   /**
@@ -45,10 +45,10 @@ class ShipCrewPost extends JsonResource
     return [
       'id' => $this->id,
       'description' => $this->description,
-      'ship' => new ShipResource(Ship::where('id', $this->ship_id)->get()),
-      'members' => $this->members,
-      'miscCrew' => $this->miscCrew,
-      'slotsAvailable' => calculateAvailableSlots($this->members, $this->miscCrew),
+      'ship' => new ShipResource(Ship::where('id', $this->ship_id)->first()),
+      'members' => json_decode($this->members),
+      'miscCrew' => json_decode($this->miscCrew),
+      'slotsAvailable' => $this->calculateAvailableSlots($this->members, $this->miscCrew),
       'created_at' => $this->created_at->format('d/m/Y'),
       'updated_at' => $this->updated_at->format('d/m/Y'),
     ];
