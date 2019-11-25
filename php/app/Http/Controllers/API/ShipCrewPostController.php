@@ -16,25 +16,26 @@ class ShipCrewPostController extends BaseController
   private function createPositions($template, $requested, $userId)
   {
     //Disable crewPositions or set creator to position
-    if(count($template) == 1 && count($requested) == 1){
+    if(count($template, COUNT_RECURSIVE) == 1 && count($requested, COUNT_RECURSIVE) == 1){
 
-      if($requested[0]->member && $requested[0]->member === "this"){
-        $template[0]['member'] = $userId;
-        $template[0]['enabled'] = true;
-      }
-      else if ($requested[0]->member && $requested[0]->member === "none"){
+      $template[0]['enabled'] = true;
+
+      if(isset($requested[0]['member']) && $requested[0]['member'] === "this")
+        $template[0]['enabled']= $userId;
+
+      else if (isset($requested[0]['member']) && $requested[0]['member'] === "none")
         $template[0]['enabled'] = false;
-      }
+
     }
     else{
       foreach ($template as $index => $crewPosition) {
 
-        if (isset($requested[$index]->member) && $requested[$index]->member === "none") {
+        $crewPosition['enabled'] = true;
+
+        if (isset($requested[$index]['member']) && $requested[$index]['member'] === "none")
           $crewPosition['enabled'] = false;
-        } else if (isset($requested[$index]->member) && $requested[$index]->member === "this") {
+        else if (isset($requested[$index]['member']) && $requested[$index]['member'] === "this")
           $crewPosition['member']  = $userId;
-          $crewPosition['enabled'] = true;
-        }
 
         $template[$index] = $crewPosition;
       }
@@ -97,7 +98,7 @@ class ShipCrewPostController extends BaseController
     }
 
     /* Create Ship Crew Positions */
-    $postedMembers = json_decode($input['members']);
+    $postedMembers = json_decode($input['members'], true);
     $postedShip = Ship::where('id', htmlspecialchars($input['ship_id']))->first();
     $shipPositions = json_decode($postedShip->crewPositions, true);
 

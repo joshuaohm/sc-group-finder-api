@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Middleware\TrustProxies;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Ship;
 use App\Http\Resources\Ship as ShipResource;
@@ -17,16 +18,16 @@ class ShipCrewPost extends JsonResource
     $total = 0;
     $filled = 0;
 
-    foreach (json_decode($members) as $position) {
+    foreach (json_decode($members, true) as $position) {
 
-      if ($position->enabled)
+      if (isset($position['enabled']) && $position['enabled'])
         $total++;
 
-      if (isset($position->member) && $position->member > 0)
+      if (isset($position['member']) && $position['member'] > 0)
         $filled++;
     }
-    foreach (json_decode($miscCrew) as $position) {
-      if ($position->member > 0)
+    foreach (json_decode($miscCrew, true) as $position) {
+      if (isset($position['member']) && $position['member'] > 0)
         $filled++;
 
       $total++;
