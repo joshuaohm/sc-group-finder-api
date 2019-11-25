@@ -16,31 +16,31 @@ class ShipsTableSeeder extends Seeder
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Stalker',
-      'crewPositions' => json_encode(['type' => 'pilot']),
+      'crewPositions' => json_encode([['type' => 'pilot']]),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Titan',
-      'crewPositions' => json_encode(['type' => 'pilot']),
+      'crewPositions' => json_encode([['type' => 'pilot']]),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Warlock',
-      'crewPositions' => json_encode(['type' => 'pilot']),
+      'crewPositions' => json_encode([['type' => 'pilot']]),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Eclipse',
-      'crewPositions' => json_encode(['type' => 'pilot']),
+      'crewPositions' => json_encode([['type' => 'pilot']]),
     ]);
 
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Gladius',
-      'crewPositions' => json_encode(['type' => 'pilot']),
+      'crewPositions' => json_encode([['type' => 'pilot']]),
     ]);
 
     \App\Ship::insert([

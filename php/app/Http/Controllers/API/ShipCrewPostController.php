@@ -15,19 +15,29 @@ class ShipCrewPostController extends BaseController
 
   private function createPositions($template, $requested, $userId)
   {
-
     //Disable crewPositions or set creator to position
-    foreach ($template as $index => $crewPosition) {
+    if(count($template) == 1 && count($requested) == 1){
 
-      $crewPosition['enabled'] = true;
-
-      if (isset($requested[$index]->member) && $requested[$index]->member === "none") {
-        $crewPosition['enabled'] = false;
-      } else if (isset($requested[$index]->member) && $requested[$index]->member === "this") {
-        $crewPosition['member']  = $userId;
+      if($requested[0]->member && $requested[0]->member === "this"){
+        $template[0]['member'] = $userId;
+        $template[0]['enabled'] = true;
       }
+      else if ($requested[0]->member && $requested[0]->member === "none"){
+        $template[0]['enabled'] = false;
+      }
+    }
+    else{
+      foreach ($template as $index => $crewPosition) {
 
-      $template[$index] = $crewPosition;
+        if (isset($requested[$index]->member) && $requested[$index]->member === "none") {
+          $crewPosition['enabled'] = false;
+        } else if (isset($requested[$index]->member) && $requested[$index]->member === "this") {
+          $crewPosition['member']  = $userId;
+          $crewPosition['enabled'] = true;
+        }
+
+        $template[$index] = $crewPosition;
+      }
     }
 
     return $template;
