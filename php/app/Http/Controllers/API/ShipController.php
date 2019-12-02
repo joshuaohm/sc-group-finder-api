@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Ship;
 use App\Http\Resources\Ship as ShipResource;
+use Illuminate\Support\Facades\DB;
 
 class ShipController extends BaseController
 {
@@ -17,6 +18,13 @@ class ShipController extends BaseController
     $ships = Ship::all();
 
     return $this->sendResponse(ShipResource::collection($ships), 'Ships retrieved successfully.');
+  }
+
+  public function getAllManufacturers()
+  {
+    $manus = Ship::select('manufacturer')->distinct()->get();
+
+    return $this->sendResponse(ShipResource::collection($manus), 'Manufacturers retrieved successfully.');
   }
 
   /**

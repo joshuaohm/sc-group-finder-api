@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::middleware('cors')->group(function () {
 
   Route::post('/register', 'API\RegisterController@register');
@@ -21,10 +22,8 @@ Route::middleware('cors')->group(function () {
   Route::middleware('auth:api')->group(function () {
     Route::resource('posts/shipcrews', 'API\ShipCrewPostController');
     Route::resource('ships', 'API\ShipController');
+    Route::get('/manufacturers', 'API\ShipController@getAllManufacturers');
     Route::post('/logout', 'API\RegisterController@logOut');
     Route::post('/logincheck', 'API\RegisterController@loginCheck');
   });
-
 });
-
-
