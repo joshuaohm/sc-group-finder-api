@@ -13,6 +13,8 @@ class ShipsTableSeeder extends Seeder
   public function run()
   {
 
+    /** BEGIN AEGIS **/
+
     \App\Ship::insert([
       'manufacturer' => 'Aegis',
       'name' => 'Avenger Stalker',
@@ -55,6 +57,23 @@ class ShipsTableSeeder extends Seeder
         ['type' => 'turret', 'position' => 'backRight'],
         ['type' => 'turret', 'position' => 'top'],
         ['type' => 'turret', 'position' => 'bottom'],
+      ]),
+    ]);
+
+    /** BEGIN DRAKE **/
+    \App\Ship::insert([
+      'manufacturer' => 'Drake',
+      'name' => 'Buccaneer',
+      'crewPositions' => json_encode([['type' => 'pilot']]),
+    ]);
+
+    \App\Ship::insert([
+      'manufacturer' => 'Drake',
+      'name' => 'Cutlass Black',
+      'crewPositions' => json_encode([
+        ['type' => 'pilot'],
+        ['type' => 'co-pilot'],
+        ['type' => 'turret', 'position' => 'Top'],
       ]),
     ]);
   }
