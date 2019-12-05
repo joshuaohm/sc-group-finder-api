@@ -16,23 +16,21 @@ class ShipCrewPostController extends BaseController
   private function createPositions($template, $requested, $userId)
   {
     //Disable crewPositions or set creator to position
-    if(count($template, COUNT_RECURSIVE) == 1 && count($requested, COUNT_RECURSIVE) == 1){
+    if (count($template, COUNT_RECURSIVE) == 1 && count($requested, COUNT_RECURSIVE) == 1) {
 
-      $template[0]['enabled'] = true;
+      $template[0]->enabled = true;
 
-      if(isset($requested[0]['member']) && $requested[0]['member'] === "this")
-        $template[0]['enabled']= $userId;
+      if (isset($requested[0]->member) && $requested[0]->member === "this")
+        $template[0]->member = $userId;
 
-      else if (isset($requested[0]['member']) && $requested[0]['member'] === "none")
-        $template[0]['enabled'] = false;
-
-    }
-    else{
+      else if (isset($requested[0]->enabled) && $requested[0]->enabled === false)
+        $template[0]->enabled = false;
+    } else {
       foreach ($template as $index => $crewPosition) {
 
         $crewPosition['enabled'] = true;
 
-        if (isset($requested[$index]['member']) && $requested[$index]['member'] === "none")
+        if (isset($requested[$index]['enabled']) && $requested[$index]['enabled'] === false)
           $crewPosition['enabled'] = false;
         else if (isset($requested[$index]['member']) && $requested[$index]['member'] === "this")
           $crewPosition['member']  = $userId;
@@ -63,7 +61,15 @@ class ShipCrewPostController extends BaseController
    */
   public function index()
   {
-    $scPosts = ShipCrewPost::where('isActive', true)->get();
+    /* User Validation */
+
+    $user = auth()->guard('api')->user();
+
+    if (!$user || !$user->id) {
+      return $this->sendError('Validation Error.', "Poster information was missing.");
+    }
+
+    $scPosts = ShipCrewPost::where('isActive', true)->where('creator_id', '!=', $user->id)->get();
 
     return $this->sendResponse(ShipCrewPostResource::collection($scPosts), 'Ship Crew Posts retrieved successfully.');
   }
@@ -129,7 +135,7 @@ class ShipCrewPostController extends BaseController
    */
   public function show($id)
   {
-    $scPost = ShipCrewPost::find($id);
+    $scPost = ShipCrewPost::where('id', htmlspecialchars($id))->first();
 
     if (is_null($scPost)) {
       return $this->sendError('Ship Crew Post not found.');
@@ -151,15 +157,20 @@ class ShipCrewPostController extends BaseController
 
     $validator = Validator::make($input, [
       'description' => 'required',
-      'ship' => 'required'
+      'post_id' => 'required',
+      'members' => 'required',
+      'miscCrew' => 'required'
     ]);
 
     if ($validator->fails()) {
       return $this->sendError('Validation Error.', $validator->errors());
     }
 
+    $scPost = ShipCrewPost::where('id', htmlspecialchars($input['post_id']))->first();
+
     $scPost->description = $input['description'];
-    $scPost->ship = $input['ship'];
+    $scPost->members = json_decode($input['members'], true);
+    $scPost->miscCrew = json_decode($input['miscCrew'], true);
     $scPost->save();
 
     return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post updated successfully.');
