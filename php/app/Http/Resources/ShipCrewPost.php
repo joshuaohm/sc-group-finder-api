@@ -6,6 +6,7 @@ use App\Http\Middleware\TrustProxies;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Ship;
 use App\Http\Resources\Ship as ShipResource;
+use App\User;
 
 class ShipCrewPost extends JsonResource
 {
@@ -23,16 +24,43 @@ class ShipCrewPost extends JsonResource
       if (isset($position['enabled']) && $position['enabled'])
         $total++;
 
-      if (isset($position['member']) && $position['member'] > 0)
+      if (isset($position['member']) && $position['member']['id'] > 0)
         $filled++;
     }
-    foreach (json_decode($miscCrew, true) as $position) {
-      if (isset($position['member']) && $position['member'] > 0)
-        $filled++;
+    if (isset($miscCrew) && json_decode($miscCrew, true))
+      foreach (json_decode($miscCrew, true) as $position) {
+        if (isset($position['member']) && $position['member']['id'] > 0)
+          $filled++;
 
-      $total++;
-    }
+        $total++;
+      }
     return $filled . "/" . $total;
+  }
+
+  /*
+   *  Will be used temporarily, remove when gameModes are modeled somewhere (maybe an enum)
+   */
+  private function parseGameMode($mode)
+  {
+    switch ($mode) {
+
+      case 1: {
+          return 'PU';
+          break;
+        }
+      case 2: {
+          return 'Arena Commander';
+          break;
+        }
+      case 3: {
+          return 'Star Marine';
+          break;
+        }
+      case 4: {
+          return 'Theaters of War';
+          break;
+        }
+    }
   }
 
   /**
@@ -49,6 +77,10 @@ class ShipCrewPost extends JsonResource
       'ship' => new ShipResource(Ship::where('id', $this->ship_id)->first()),
       'members' => json_decode($this->members),
       'miscCrew' => json_decode($this->miscCrew),
+      'creator' =>  User::where('id', $this->creator_id)->first()->name(),
+      'gameMode' => parseGameMode($this->gameMode),
+      'startLocation' => $this->startLocation,
+      'targetLocation' => $this->targetLocation,
       'slotsAvailable' => $this->calculateAvailableSlots($this->members, $this->miscCrew),
       'created_at' => $this->created_at->format('d/m/Y'),
       'updated_at' => $this->updated_at->format('d/m/Y'),

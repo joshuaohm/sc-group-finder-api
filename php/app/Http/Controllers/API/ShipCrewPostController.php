@@ -13,27 +13,36 @@ use App\Http\Resources\ShipCrewPost as ShipCrewPostResource;
 class ShipCrewPostController extends BaseController
 {
 
-  private function createPositions($template, $requested, $userId)
+  //Iterates through crewPositions on a ship and creates assignable members slots for the post
+  private function createPositions($template, $requested, $userId, $userName)
   {
     //Disable crewPositions or set creator to position
     if (count($template, COUNT_RECURSIVE) == 1 && count($requested, COUNT_RECURSIVE) == 1) {
 
       $template[0]->enabled = true;
 
-      if (isset($requested[0]->member) && $requested[0]->member === "this")
-        $template[0]->member = $userId;
-
-      else if (isset($requested[0]->enabled) && $requested[0]->enabled === false)
-        $template[0]->enabled = false;
+      //Assign position to creator, or disable it
+      if (isset($requested[0]['member']) && $requested[0]['member']['id'] === "this") {
+        $template[0]['member']['id'] = $userId;
+        $template[0]['member']['name'] = $userName;
+      } else if (isset($requested[0]['enabled']) && $requested[0]['enabled'] === false)
+        $template[0]['enabled'] = false;
     } else {
       foreach ($template as $index => $crewPosition) {
 
         $crewPosition['enabled'] = true;
-
-        if (isset($requested[$index]['enabled']) && $requested[$index]['enabled'] === false)
+        //Assign position to creator, or disable it
+        if (isset($requested[$index]['member']) && $requested[$index]['member']['id'] === "this") {
+          $crewPosition['member']['id'] = $userId;
+          $crewPosition['member']['name'] = $userName;
+        } else if (isset($requested[$index]['enabled']) && $requested[$index]['enabled'] === false) {
           $crewPosition['enabled'] = false;
-        else if (isset($requested[$index]['member']) && $requested[$index]['member'] === "this")
-          $crewPosition['member']  = $userId;
+        }
+
+        if (!isset($crewPosition['member'])) {
+          $crewPosition['member']['id'] = 0;
+          $crewPosition['member']['name'] = "";
+        }
 
         $template[$index] = $crewPosition;
       }
@@ -45,11 +54,14 @@ class ShipCrewPostController extends BaseController
   private function createMiscCrewPositions($miscCrew)
   {
     $temp = null;
-
-    for ($i = 0; $i < $miscCrew; $i++) {
-      $new['member'] = 0;
-      $temp[$i] = $new;
-    }
+    if (isset($miscCrew))
+      for ($i = 0; $i < $miscCrew; $i++) {
+        $new = new \stdClass();
+        $new->member = new \stdClass();
+        $new->member->id = 0;
+        $new->member->name = '';
+        $temp[$i] = $new;
+      }
 
     return $temp;
   }
@@ -99,7 +111,7 @@ class ShipCrewPostController extends BaseController
 
     $user = auth()->guard('api')->user();
 
-    if (!$user || !$user->id) {
+    if (!$user || !$user->id || !$user->name) {
       return $this->sendError('Validation Error.', "Poster information was missing.");
     }
 
@@ -112,7 +124,7 @@ class ShipCrewPostController extends BaseController
       return $this->sendError('Validation Error.', "Ship information was missing.");
     }
 
-    $shipPositions = $this->createPositions($shipPositions, $postedMembers, $user->id);
+    $shipPositions = $this->createPositions($shipPositions, $postedMembers, $user->id, $user->name);
 
     $miscCrew = $this->createMiscCrewPositions($input['miscCrew']);
 

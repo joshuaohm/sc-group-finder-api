@@ -47,14 +47,19 @@ class RegisterController extends BaseController
   public function login(Request $request)
   {
     //User is already logged in
-    if(Auth::user()){
+    if (Auth::user()) {
       $success['token'] = $request->bearerToken();
+      $success['id'] = Auth::user()->id;
+      $success['name'] = Auth::user()->name;
+
       return $this->sendResponse($success, 'User login successfully.');
     }
     //User is not logged in yet
     else if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
       $user = Auth::user();
       $success['token'] =  $user->createToken('SCGF')->accessToken;
+      $success['id'] = $user->id;
+      $success['name'] = $user->name;
 
       return $this->sendResponse($success, 'User login successfully.');
     } else {
@@ -62,20 +67,21 @@ class RegisterController extends BaseController
     }
   }
 
-   /**
+  /**
    * LoginCheck api
    *
    * @return \Illuminate\Http\Response
    */
   public function loginCheck(Request $request)
   {
-    if($user = Auth::user()){
+    if ($user = Auth::user()) {
 
       $success['token'] = $request->bearerToken();
+      $success['id'] = Auth::user()->id;
+      $success['name'] = Auth::user()->name;
 
       return $this->sendResponse($success, 'User is logged in.');
-    }
-    else
+    } else
       return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
   }
 
@@ -84,22 +90,21 @@ class RegisterController extends BaseController
    *
    * @return \Illuminate\Http\Response
    */
-  public function logOut(Request $request){
+  public function logOut(Request $request)
+  {
 
-    if(Auth::user()){
+    if (Auth::user()) {
 
       DB::table('oauth_access_tokens')
-      ->where('user_id', Auth::user()->id)
-      ->update([
-        'revoked' => true
-      ]);
+        ->where('user_id', Auth::user()->id)
+        ->update([
+          'revoked' => true
+        ]);
 
       $success['token'] = '';
 
       return $this->sendResponse($success, 'User logged out successfully.');
-    }
-    else
+    } else
       return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
-
   }
 }
