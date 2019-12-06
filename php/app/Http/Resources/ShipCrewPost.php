@@ -78,7 +78,7 @@ class ShipCrewPost extends JsonResource
       'members' => json_decode($this->members),
       'miscCrew' => json_decode($this->miscCrew),
       'creator' =>  User::where('id', $this->creator_id)->first()->name,
-      'gameMode' => parseGameMode($this->gameMode),
+      'gameMode' => $this->parseGameMode($this->gameMode),
       'startLocation' => $this->startLocation,
       'targetLocation' => $this->targetLocation,
       'slotsAvailable' => $this->calculateAvailableSlots($this->members, $this->miscCrew),
