@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Location;
 
 class LocationsTableSeeder extends Seeder
 {
@@ -15,7 +14,7 @@ class LocationsTableSeeder extends Seeder
 
     $ids = [
       'Crusader' => 1,
-      'Hurston' => 2
+      'Hurston' => 2,
       'ArcCorp' => 3,
       'MicroTech' => 4,
       'Cellin' => 5,
