@@ -38,18 +38,21 @@ class LocationsTableSeeder extends Seeder
     ]);
 
     \App\Location::insert([
+      'id' => $ids['Yela'],
       'type' => 3,
       'name' => 'Yela',
       'parent' => $ids['Crusader'],
     ]);
 
     \App\Location::insert([
+      'id' => $ids['Daymar'],
       'type' => 3,
       'name' => 'Daymar',
       'parent' => $ids['Crusader'],
     ]);
 
     \App\Location::insert([
+      'id' => $ids['Cellin'],
       'type' => 3,
       'name' => 'Cellin',
       'parent' => $ids['Crusader'],
@@ -64,18 +67,21 @@ class LocationsTableSeeder extends Seeder
     ]);
 
     \App\Location::insert([
+      'id' => $ids['Aberdeen'],
       'type' => 3,
       'name' => 'Aberdeen',
       'parent' => $ids['Hurston'],
     ]);
 
     \App\Location::insert([
+      'id' => $ids['Arial'],
       'type' => 3,
       'name' => 'Arial',
       'parent' => $ids['Hurston'],
     ]);
 
     \App\Location::insert([
+      'id' => $ids['Magda'],
       'type' => 3,
       'name' => 'Magda',
       'parent' => $ids['Hurston'],
@@ -90,12 +96,14 @@ class LocationsTableSeeder extends Seeder
     ]);
 
     \App\Location::insert([
+      'id' => $ids['Lyria'],
       'type' => 3,
       'name' => 'Lyria',
       'parent' => $ids['ArcCorp'],
     ]);
 
     \App\Location::insert([
+      'id' => $ids['Wala'],
       'type' => 3,
       'name' => 'Wala',
       'parent' => $ids['ArcCorp'],
