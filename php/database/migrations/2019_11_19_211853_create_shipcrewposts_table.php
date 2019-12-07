@@ -20,8 +20,8 @@ class CreateShipCrewPostsTable extends Migration
       $table->bigInteger('ship_id')->unsigned()->default(0);
       $table->string('inviteCode', 6)->unique()->nullable();
       $table->string('description', 255);
-      $table->string('startLocation', 255)->nullable();
-      $table->string('targetLocation', 255)->nullable();
+      $table->bigInteger('startLocation')->unsigned()->nullable();
+      $table->bigInteger('targetLocation')->unsigned()->nullable();
       $table->bigInteger('gameMode')->unsigned()->default(0);
       $table->json('miscCrew')->nullable();
       $table->json('members')->nullable();
@@ -31,6 +31,8 @@ class CreateShipCrewPostsTable extends Migration
     Schema::table('ship_crew_posts', function ($table) {
       $table->foreign('creator_id')->references('id')->on('users');
       $table->foreign('ship_id')->references('id')->on('ships');
+      $table->foreign('startLocation')->references('id')->on('locations');
+      $table->foreign('targetLocation')->references('id')->on('locations');
     });
   }
 
