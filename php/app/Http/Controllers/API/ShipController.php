@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Ship;
 use App\Http\Resources\Ship as ShipResource;
-use Illuminate\Support\Facades\DB;
 
 class ShipController extends BaseController
 {
