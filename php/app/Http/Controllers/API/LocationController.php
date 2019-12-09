@@ -30,6 +30,18 @@ class LocationController extends BaseController
     return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
   }
 
+  public function showChildrenOfType($id, $type)
+  {
+    $ret = Location::where('parent', $id)->where('type', $type)->get();
+
+    if (is_null($ret)) {
+      return $this->sendError('Ship not found.');
+    }
+
+    return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
+  }
+
+
   public function showType($type)
   {
 
