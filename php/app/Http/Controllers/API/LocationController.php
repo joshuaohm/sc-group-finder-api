@@ -16,7 +16,7 @@ class LocationController extends BaseController
   {
     $ret = Location::all();
 
-    return $this->sendResponse(Location::collection($ret), 'Locations retrieved successfully.');
+    return $this->sendResponse(LocationResource::collection($ret), 'Locations retrieved successfully.');
   }
 
   public function showChildren($id)
