@@ -14,7 +14,9 @@ class LocationsTableSeeder extends Seeder
   public function run()
   {
 
+    DB::statement('SET FOREIGN_KEY_CHECKS = 0');
     DB::table('locations')->delete();
+    DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
     $locs = [
       'UNKNOWN' => [],
@@ -27,10 +29,10 @@ class LocationsTableSeeder extends Seeder
       ],
 
       'Bodies' => [
-        'Crusader' => ['id' => 2000, 'parent' => 1],
-        'Hurston' => ['id' => 0, 'parent' => 'Stanton'],
-        'ArcCorp' => ['id' => 0, 'parent' => 'Stanton'],
-        'MicroTech' => ['id' => 0, 'parent' => 'Stanton'],
+        'Crusader' => ['id' => 2000, 'parent' => 1000],
+        'Hurston' => ['id' => 0, 'parent' => 1000],
+        'ArcCorp' => ['id' => 0, 'parent' => 1000],
+        'MicroTech' => ['id' => 0, 'parent' => 1000],
         'Cellin' => ['id' => 0, 'parent' => 'Crusader'],
         'Delamar' => ['id' => 0, 'parent' => 'Crusader'],
         'Yela' => ['id' => 0, 'parent' => 'Crusader'],
@@ -39,8 +41,8 @@ class LocationsTableSeeder extends Seeder
         'Arial' => ['id' => 0, 'parent' => 'Hurston'],
         'Magda' => ['id' => 0, 'parent' => 'Hurston'],
         'Ita' => ['id' => 0, 'parent' => 'Hurston'],
-        'Lyria' => ['id' => 0, 'parent' => 'ArcoCorp'],
-        'Wala' => ['id' => 0, 'parent' => 'ArcoCorp'],
+        'Lyria' => ['id' => 0, 'parent' => 'ArcCorp'],
+        'Wala' => ['id' => 0, 'parent' => 'ArcCorp'],
       ],
 
       'LandingZone' => [
@@ -80,7 +82,7 @@ class LocationsTableSeeder extends Seeder
         'Hickes Research Outpost' => ['id' => 0, 'parent' => 'Cellin'],
         'Terra Mills HydroFarm' => ['id' => 0, 'parent' => 'Cellin'],
         'PRIVATE PROPERTY' => ['id' => 0, 'parent' => 'Cellin'],
-        'Levski' => ['id' => 0, 'parent' => 'Levski'],
+        'Levski' => ['id' => 0, 'parent' => 'Delamar'],
         'HDMO-Calthrope (NA)' => ['id' => 0, 'parent' => 'Hurston'],
         'Comm Array ST1-61' => ['id' => 0, 'parent' => 'Hurston'],
         'Comm Array ST1-13' => ['id' => 0, 'parent' => 'Hurston'],
@@ -148,48 +150,63 @@ class LocationsTableSeeder extends Seeder
         'ArcCorp Mining Area 056' => ['id' => 0, 'parent' => 'Wala'],
         'ArcCorp Mining Area 061' => ['id' => 0, 'parent' => 'Wala'],
         'Samson & Son\'s Salvage Center' => ['id' => 0, 'parent' => 'Wala'],
+        'ArcCorp Mining Area 061' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R ARC-L1' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R ARC-L2' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R ARC-L3' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R ARC-L4' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R ARC-L5' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R CRU-L1' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R CRU-L4' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R CRU-L5' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R HUR-L1' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R HUR-L2' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R HUR-L3' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R HUR-L4' => ['id' => 0, 'parent' => 'Stanton'],
+        'R&R HUR-L5' => ['id' => 0, 'parent' => 'Stanton'],
       ]
 
     ];
 
     $lastId = 0;
+    $typeIndexNum = 0;
 
     foreach ($locs as $typeIndex => $typeLocations) {
 
       foreach ($typeLocations as $locationIndex => $location) {
 
+        //echo array_keys($locs)[$typeIndexNum] . "\n";
+        //echo $locationIndex . "\n";
         //Explicit ID not set, increment from previous.
         if ($location['id'] === 0) {
           $location['id'] = $lastId + 1;
         }
 
         //Parent given was a string reference, not an id
-        if (!is_numeric($location['parent'])) {
-          //Search One higher up in the hierarchy for a parent to grab its id
-          if ($locs[$typeIndex - 1] && $locs[$typeIndex - 1][$location['parent']] && $locs[$typeIndex - 1][$location['parent']]['id'] > 0)
-            $location['parent'] = $locs[$typeIndex - 1][$location['parent']]['id'];
+        if (isset($location['parent']) && !is_numeric($location['parent'])) {
+          //Search higher up in the hierarchy for a parent to grab its id
+          if (isset($locs[array_keys($locs)[$typeIndexNum - 2]]) && isset($locs[array_keys($locs)[$typeIndexNum - 2]][$location['parent']]))
+            $location['parent'] = $locs[array_keys($locs)[$typeIndexNum - 2]][$location['parent']]['id'];
+          else if (isset($locs[array_keys($locs)[$typeIndexNum - 1]]) && isset($locs[array_keys($locs)[$typeIndexNum - 1]][$location['parent']]))
+            $location['parent'] = $locs[array_keys($locs)[$typeIndexNum - 1]][$location['parent']]['id'];
           //if parent is the same type of Object as child(Planets -> Moons, both are Bodies)
-          else if ($locs[$typeIndex] && $locs[$typeIndex][$location['parent']] && $locs[$typeIndex][$location['parent']]['id'] > 0)
+          else if ($locs[$typeIndex] && $locs[$typeIndex][$location['parent']])
             $location['parent'] = $locs[$typeIndex][$location['parent']]['id'];
         }
 
-        /*
         \App\Location::insert([
-          'id' => $location['id']],
-          'type' => $typeIndex,
+          'id' => $location['id'],
+          'type' => $typeIndexNum,
           'name' => $locationIndex,
-          'parent' => $location['parent'],
+          'parent' => isset($location['parent']) ? $location['parent'] : null,
         ]);
-        */
-
-        echo $locationIndex . "\n";
-        echo $location['id'] . "\n";
-        echo $location['parent'] . "\n";
-        echo $typeIndex . "\n";
 
 
         $lastId = $location['id'];
+
+        $locs[$typeIndex][$locationIndex] = $location;
       }
+      $typeIndexNum++;
     }
   }
 }
