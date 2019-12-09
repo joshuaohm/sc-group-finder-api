@@ -14,14 +14,14 @@ class LocationController extends BaseController
    */
   public function index()
   {
-    $ret = Location::all();
+    $ret = Location::all()->orderBy('name', 'asc');
 
     return $this->sendResponse(LocationResource::collection($ret), 'Locations retrieved successfully.');
   }
 
   public function showChildren($id)
   {
-    $ret = Location::where('parent', $id)->get();
+    $ret = Location::where('parent', $id)->orderBy('name', 'asc')->get();
 
     if (is_null($ret)) {
       return $this->sendError('Ship not found.');
@@ -32,7 +32,7 @@ class LocationController extends BaseController
 
   public function showChildrenOfType($id, $type)
   {
-    $ret = Location::where('parent', $id)->where('type', $type)->get();
+    $ret = Location::where('parent', $id)->where('type', $type)->orderBy('name', 'asc')->get();
 
     if (is_null($ret)) {
       return $this->sendError('Ship not found.');
@@ -45,7 +45,7 @@ class LocationController extends BaseController
   public function showType($type)
   {
 
-    $ret = Location::where('type', $type)->get();
+    $ret = Location::where('type', $type)->orderBy('name', 'asc')->get();
 
     if (is_null($ret)) {
       return $this->sendError('Ship not found.');
