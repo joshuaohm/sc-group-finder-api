@@ -141,7 +141,7 @@ class ShipCrewPostController extends BaseController
 
     $shipPositions = $this->createPositions($shipPositions, $postedMembers, $user->id, $user->name);
 
-    $miscCrew = $this->createMiscCrewPositions($input['miscCrew']);
+    $miscCrew = isset($input['miscCrew']) ? $this->createMiscCrewPositions($input['miscCrew']) : null;
 
     $scPost = ShipCrewPost::create([
       'description' => htmlspecialchars($input['description']),
