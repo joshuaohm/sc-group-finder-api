@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Http\Middleware\TrustProxies;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Ship;
+use App\Location;
 use App\Http\Resources\Ship as ShipResource;
 use App\Http\Resources\Location as LocationResource;
 use App\User;
