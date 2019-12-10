@@ -124,7 +124,8 @@ class ShipCrewPostController extends BaseController
       $startLocation = $input['startZone'];
     } else if (isset($input['startBody'])) {
       $startLocation = $input['startBody'];
-    } else if (isset($input['targetZone'])) {
+    }
+    if (isset($input['targetZone'])) {
       $targetLocation = $input['targetZone'];
     } else if (isset($input['targetBody'])) {
       $targetLocation = $input['targetBody'];
