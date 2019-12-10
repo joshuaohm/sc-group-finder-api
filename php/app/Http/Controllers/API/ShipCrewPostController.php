@@ -107,12 +107,27 @@ class ShipCrewPostController extends BaseController
       return $this->sendError('Validation Error.', $validator->errors());
     }
 
-    /* User Validation */
 
+    /* User Validation */
     $user = auth()->guard('api')->user();
 
     if (!$user || !$user->id || !$user->name) {
       return $this->sendError('Validation Error.', "Poster information was missing.");
+    }
+
+
+    /* Parse Locations */
+    $startLocation = 0;
+    $targetLocation = 0;
+
+    if (isset($input['startZone'])) {
+      $startLocation = $input['startZone'];
+    } else if (isset($input['startBody'])) {
+      $startLocation = $input['startBody'];
+    } else if (isset($input['targetZone'])) {
+      $targetLocation = $input['targetZone'];
+    } else if (isset($input['targetBody'])) {
+      $targetLocation = $input['targetBody'];
     }
 
     /* Create Ship Crew Positions */
@@ -132,6 +147,8 @@ class ShipCrewPostController extends BaseController
       'description' => htmlspecialchars($input['description']),
       'ship_id'     => $postedShip->id,
       'creator_id'  => $user->id,
+      'startLocation' => $startLocation > 0 ? $startLocation : null,
+      'targetLocation' => $targetLocation > 0 ? $targetLocation : null,
       'members'     => json_encode($shipPositions, true),
       'miscCrew'    => json_encode($miscCrew, true)
     ]);

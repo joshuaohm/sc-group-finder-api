@@ -6,6 +6,7 @@ use App\Http\Middleware\TrustProxies;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Ship;
 use App\Http\Resources\Ship as ShipResource;
+use App\Http\Resources\Location as LocationResource;
 use App\User;
 
 class ShipCrewPost extends JsonResource
@@ -79,8 +80,8 @@ class ShipCrewPost extends JsonResource
       'miscCrew' => json_decode($this->miscCrew),
       'creator' =>  User::where('id', $this->creator_id)->first()->name,
       'gameMode' => $this->parseGameMode($this->gameMode),
-      'startLocation' => $this->startLocation,
-      'targetLocation' => $this->targetLocation,
+      'startLocation' => new LocationResource(Location::where('id', $this->startLocation)->first()),
+      'targetLocation' => new LocationResource(Location::where('id', $this->targetLocation)->first()),
       'slotsAvailable' => $this->calculateAvailableSlots($this->members, $this->miscCrew),
       'created_at' => $this->created_at->format('d/m/Y'),
       'updated_at' => $this->updated_at->format('d/m/Y'),
