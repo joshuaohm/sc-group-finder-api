@@ -24,7 +24,7 @@ class LocationController extends BaseController
     $ret = Location::where('parent', $id)->orderBy('name', 'asc')->get();
 
     if (is_null($ret)) {
-      return $this->sendError('Ship not found.');
+      return $this->sendError('Location not found.');
     }
 
     return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
@@ -35,7 +35,7 @@ class LocationController extends BaseController
     $ret = Location::where('parent', $id)->where('type', $type)->orderBy('name', 'asc')->get();
 
     if (is_null($ret)) {
-      return $this->sendError('Ship not found.');
+      return $this->sendError('Location not found.');
     }
 
     return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
@@ -48,7 +48,7 @@ class LocationController extends BaseController
     $ret = Location::where('type', $type)->orderBy('name', 'asc')->get();
 
     if (is_null($ret)) {
-      return $this->sendError('Ship not found.');
+      return $this->sendError('Location not found.');
     }
 
     return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
@@ -65,7 +65,7 @@ class LocationController extends BaseController
     $ret = Location::find($id);
 
     if (is_null($ret)) {
-      return $this->sendError('Ship not found.');
+      return $this->sendError('Location not found.');
     }
 
     return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
