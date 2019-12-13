@@ -27,7 +27,7 @@ class LocationController extends BaseController
       return $this->sendError('Location not found.');
     }
 
-    return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
+    return $this->sendResponse(LocationResource::collection($ret), 'Location retrieved successfully.');
   }
 
   public function showChildrenOfType($id, $type)
@@ -38,7 +38,7 @@ class LocationController extends BaseController
       return $this->sendError('Location not found.');
     }
 
-    return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
+    return $this->sendResponse(LocationResource::collection($ret), 'Location retrieved successfully.');
   }
 
 
@@ -51,7 +51,7 @@ class LocationController extends BaseController
       return $this->sendError('Location not found.');
     }
 
-    return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
+    return $this->sendResponse(LocationResource::collection($ret), 'Location retrieved successfully.');
   }
 
   /**
@@ -68,6 +68,6 @@ class LocationController extends BaseController
       return $this->sendError('Location not found.');
     }
 
-    return $this->sendResponse(new LocationResource($ret), 'Location retrieved successfully.');
+    return $this->sendResponse(LocationResource::collection($ret), 'Location retrieved successfully.');
   }
 }

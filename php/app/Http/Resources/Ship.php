@@ -24,6 +24,7 @@ class Ship extends JsonResource
     $crewPositions = PositionResource::collection($positions);
 
     return [
+      'id' => $this->id,
       'manufacturer' => $this->manufacturer,
       'name' => $this->name,
       'crewPositions' => $crewPositions
