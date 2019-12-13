@@ -22,7 +22,7 @@ class Ship extends JsonResource
     return [
       'manufacturer' => $this->manufacturer,
       'name' => $this->name,
-      'crewPositions' => new PositionResource(Position::whereIn('id', ShipPosition::where('ship', $this->id)->get()->position)->get())
+      'crewPositions' => new PositionResource::collection(Position::whereIn('id', ShipPosition::where('ship', $this->id)->get()->position)->get())
     ];
   }
 }
