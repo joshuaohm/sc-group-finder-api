@@ -23,8 +23,6 @@ class CreateShipCrewPostsTable extends Migration
       $table->bigInteger('startLocation')->unsigned()->nullable();
       $table->bigInteger('targetLocation')->unsigned()->nullable();
       $table->bigInteger('gameMode')->unsigned()->default(0);
-      $table->json('miscCrew')->nullable();
-      $table->json('members')->nullable();
       $table->timestamps();
     });
 

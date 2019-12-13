@@ -6,9 +6,13 @@ use App\Http\Middleware\TrustProxies;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Ship;
 use App\Location;
+use App\User;
+use App\ShipCrewPosition;
 use App\Http\Resources\Ship as ShipResource;
 use App\Http\Resources\Location as LocationResource;
-use App\User;
+use App\Http\Resources\User as UserResource;
+use App\Http\Resources\ShipCrewPosition as ShipCrewPositionResource;
+
 
 class ShipCrewPost extends JsonResource
 {
@@ -21,21 +25,9 @@ class ShipCrewPost extends JsonResource
     $total = 0;
     $filled = 0;
 
-    foreach (json_decode($members, true) as $position) {
+    $total = $members::count() + $miscCrew::count();
+    $filled = $members::where('filled', true)->count() + $miscCrew::where('filled', true)->count();
 
-      if (isset($position['enabled']) && $position['enabled'])
-        $total++;
-
-      if (isset($position['member']) && $position['member']['id'] > 0)
-        $filled++;
-    }
-    if (isset($miscCrew) && json_decode($miscCrew, true))
-      foreach (json_decode($miscCrew, true) as $position) {
-        if (isset($position['member']) && $position['member']['id'] > 0)
-          $filled++;
-
-        $total++;
-      }
     return $filled . "/" . $total;
   }
 
@@ -73,17 +65,20 @@ class ShipCrewPost extends JsonResource
    */
   public function toArray($request)
   {
+    $members = new ShipCrewPositionResource(ShipCrewPosition::where('post', $this->id)->where('type', '!=', 1)->get());
+    $miscCrew = new ShipCrewPositionResource(ShipCrewPosition::where('post', $this->id)->where('type', 1)->get());
+
     return [
       'id' => $this->id,
       'description' => $this->description,
       'ship' => new ShipResource(Ship::where('id', $this->ship_id)->first()),
-      'members' => json_decode($this->members),
-      'miscCrew' => json_decode($this->miscCrew),
+      'members' => $members,
+      'miscCrew' => $miscCrew,
       'creator' =>  User::where('id', $this->creator_id)->first()->name,
       'gameMode' => $this->parseGameMode($this->gameMode),
       'startLocation' => new LocationResource(Location::where('id', $this->startLocation)->first()),
       'targetLocation' => new LocationResource(Location::where('id', $this->targetLocation)->first()),
-      'slotsAvailable' => $this->calculateAvailableSlots($this->members, $this->miscCrew),
+      'slotsAvailable' => $this->calculateAvailableSlots($members, $miscCrew),
       'created_at' => $this->created_at->format('d/m/Y'),
       'updated_at' => $this->updated_at->format('d/m/Y'),
     ];

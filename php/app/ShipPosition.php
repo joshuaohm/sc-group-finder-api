@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ShipCrewPosition extends Model
+class ShipPosition extends Model
 {
   /**
    * The attributes that are mass assignable.
@@ -12,6 +12,6 @@ class ShipCrewPosition extends Model
    * @var array
    */
   protected $fillable = [
-    "type", "post", "user", "filled", "requested"
+    "type", "position"
   ];
 }
