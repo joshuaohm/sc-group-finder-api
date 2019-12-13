@@ -34,7 +34,7 @@ class PositionsTableSeeder extends Seeder
         ) {
           \App\Position::insert([
             'type' => $type,
-            'position' => $position
+            'location' => $position
           ]);
         }
 
