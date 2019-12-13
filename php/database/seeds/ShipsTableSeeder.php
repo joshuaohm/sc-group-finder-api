@@ -36,8 +36,8 @@ class ShipsTableSeeder extends Seeder
           ["type" => "co-pilot"],
           ["type" => "turret", "location" => "frontLeft"],
           ["type" => "turret", "location" => "frontRight"],
-          ["type" => "turret", "location" => "backLeft"],
-          ["type" => "turret", "location" => "backRight"],
+          ["type" => "turret", "location" => "rearLeft"],
+          ["type" => "turret", "location" => "rearRight"],
           ["type" => "turret", "location" => "top"],
           ["type" => "turret", "location" => "bottom"],
         ]
@@ -57,17 +57,12 @@ class ShipsTableSeeder extends Seeder
     foreach ($ships as $manuIndex => $manufacturer) {
       foreach ($manufacturer as $shipIndex => $ship) {
 
-        echo $manuIndex . "\n";
-        echo $shipIndex . "\n";
-
         $temp = \App\Ship::insertGetId([
           "manufacturer" => $manuIndex,
           "name" => $shipIndex
         ]);
 
-
         for ($i = 0; $i < count($ship); $i++) {
-          echo var_dump($ship[$i]);
           \App\ShipPosition::insert([
             "ship" => $temp,
             "position" => Position::where("type", $ship[$i]["type"])->where("location", isset($ship[$i]["location"]) ? $ship[$i]['location'] : null)->first()->id
