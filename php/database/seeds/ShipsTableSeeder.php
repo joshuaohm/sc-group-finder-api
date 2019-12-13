@@ -57,10 +57,10 @@ class ShipsTableSeeder extends Seeder
     foreach ($ships as $manuIndex => $manufacturer) {
       foreach ($manufacturer as $shipIndex => $ship) {
 
-        $temp = \App\Ship::insert([
+        $temp = \App\Ship::insertGetId([
           'manufacturer' => $manuIndex,
           'name' => $shipIndex
-        ])->id;
+        ]);
 
         foreach ($ship as $positionIndex => $position) {
           \App\ShipPosition::insert([
