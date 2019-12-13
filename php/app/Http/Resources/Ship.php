@@ -4,8 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use App\Http\Resources\Position as PositionResource;
-use App\Http\Resources\ShipPosition as ShipPositionResource;
+use App\Http\Resources\PositionResource as PositionResource;
 use App\ShipPosition;
 use App\Position;
 
@@ -20,10 +19,12 @@ class Ship extends JsonResource
   public function toArray($request)
   {
     $shipPositions =  ShipPosition::where('ship', $this->id)->get()->position;
+    $positions = Position::whereIn('id', $shipPositions)->get();
+
     return [
       'manufacturer' => $this->manufacturer,
       'name' => $this->name,
-      'crewPositions' => new PositionResource::collection(Position::whereIn('id', $shipPositions)->get())
+      'crewPositions' => new PositionResource::collection($positions)
     ];
   }
 }
