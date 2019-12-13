@@ -15,41 +15,41 @@ class ShipsTableSeeder extends Seeder
   public function run()
   {
 
-    DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-    DB::table('ships')->delete();
-    DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+    DB::statement("SET FOREIGN_KEY_CHECKS = 0");
+    DB::table("ships")->delete();
+    DB::statement("SET FOREIGN_KEY_CHECKS = 1");
 
     $temp = 0;
 
     $ships = [
-      'Aegis' => [
-        'Avenger Stalker' => ['name' => 'pilot'],
-        'Avenger Titan' => ['name' => 'pilot'],
-        'Avenger Warlock' => ['name' => 'pilot'],
-        'Eclipse' => ['name' => 'pilot'],
-        'Gladius' => [
-          ['name' => 'pilot'],
-          ['name' => 'turret', 'location' => 'top']
+      "Aegis" => [
+        "Avenger Stalker" => ["name" => "pilot"],
+        "Avenger Titan" => ["name" => "pilot"],
+        "Avenger Warlock" => ["name" => "pilot"],
+        "Eclipse" => ["name" => "pilot"],
+        "Gladius" => [
+          ["name" => "pilot"],
+          ["name" => "turret", "location" => "top"]
         ],
-        'Hammerhead' => [
-          ['name' => 'pilot'],
-          ['name' => 'co-pilot'],
-          ['name' => 'turret', 'location' => 'frontLeft'],
-          ['name' => 'turret', 'location' => 'frontRight'],
-          ['name' => 'turret', 'location' => 'backLeft'],
-          ['name' => 'turret', 'location' => 'backRight'],
-          ['name' => 'turret', 'location' => 'top'],
-          ['name' => 'turret', 'location' => 'bottom'],
+        "Hammerhead" => [
+          ["name" => "pilot"],
+          ["name" => "co-pilot"],
+          ["name" => "turret", "location" => "frontLeft"],
+          ["name" => "turret", "location" => "frontRight"],
+          ["name" => "turret", "location" => "backLeft"],
+          ["name" => "turret", "location" => "backRight"],
+          ["name" => "turret", "location" => "top"],
+          ["name" => "turret", "location" => "bottom"],
         ]
       ],
-      'Drake' => [
-        'Buccaneer' => [
-          ['name' => 'pilot']
+      "Drake" => [
+        "Buccaneer" => [
+          ["name" => "pilot"]
         ],
-        'Cutlass Black' => [
-          ['name' => 'pilot'],
-          ['name' => 'co-pilot'],
-          ['name' => 'turret', 'location' => 'top']
+        "Cutlass Black" => [
+          ["name" => "pilot"],
+          ["name" => "co-pilot"],
+          ["name" => "turret", "location" => "top"]
         ]
       ]
     ];
@@ -58,14 +58,14 @@ class ShipsTableSeeder extends Seeder
       foreach ($manufacturer as $shipIndex => $ship) {
 
         $temp = \App\Ship::insertGetId([
-          'manufacturer' => $manuIndex,
-          'name' => $shipIndex
+          "manufacturer" => $manuIndex,
+          "name" => $shipIndex
         ]);
 
         foreach ($ship as $positionIndex => $position) {
           \App\ShipPosition::insert([
-            'ship' => $temp,
-            'position' => Position::where('name', $position['name'])->where('location', $position['location'])->first()->id
+            "ship" => $temp,
+            "position" => Position::where("name", $position["name"])->where("location", $position["location"])->first()->id
           ]);
         }
       }
