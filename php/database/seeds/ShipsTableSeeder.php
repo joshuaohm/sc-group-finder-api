@@ -43,9 +43,7 @@ class ShipsTableSeeder extends Seeder
         ]
       ],
       "Drake" => [
-        "Buccaneer" => [
-          [["type" => "pilot"]]
-        ],
+        "Buccaneer" => [["type" => "pilot"]],
         "Cutlass Black" => [
           ["type" => "pilot"],
           ["type" => "co-pilot"],
@@ -61,8 +59,6 @@ class ShipsTableSeeder extends Seeder
           "manufacturer" => $manuIndex,
           "name" => $shipIndex
         ]);
-
-        echo var_dump($ship);
 
         for ($i = 0; $i < count($ship); $i++) {
 
