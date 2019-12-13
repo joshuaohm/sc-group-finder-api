@@ -23,33 +23,33 @@ class ShipsTableSeeder extends Seeder
 
     $ships = [
       "Aegis" => [
-        "Avenger Stalker" => ["name" => "pilot"],
-        "Avenger Titan" => ["name" => "pilot"],
-        "Avenger Warlock" => ["name" => "pilot"],
-        "Eclipse" => ["name" => "pilot"],
+        "Avenger Stalker" => ["type" => "pilot"],
+        "Avenger Titan" => ["type" => "pilot"],
+        "Avenger Warlock" => ["type" => "pilot"],
+        "Eclipse" => ["type" => "pilot"],
         "Gladius" => [
-          ["name" => "pilot"],
-          ["name" => "turret", "location" => "top"]
+          ["type" => "pilot"],
+          ["type" => "turret", "location" => "top"]
         ],
         "Hammerhead" => [
-          ["name" => "pilot"],
-          ["name" => "co-pilot"],
-          ["name" => "turret", "location" => "frontLeft"],
-          ["name" => "turret", "location" => "frontRight"],
-          ["name" => "turret", "location" => "backLeft"],
-          ["name" => "turret", "location" => "backRight"],
-          ["name" => "turret", "location" => "top"],
-          ["name" => "turret", "location" => "bottom"],
+          ["type" => "pilot"],
+          ["type" => "co-pilot"],
+          ["type" => "turret", "location" => "frontLeft"],
+          ["type" => "turret", "location" => "frontRight"],
+          ["type" => "turret", "location" => "backLeft"],
+          ["type" => "turret", "location" => "backRight"],
+          ["type" => "turret", "location" => "top"],
+          ["type" => "turret", "location" => "bottom"],
         ]
       ],
       "Drake" => [
         "Buccaneer" => [
-          ["name" => "pilot"]
+          ["type" => "pilot"]
         ],
         "Cutlass Black" => [
-          ["name" => "pilot"],
-          ["name" => "co-pilot"],
-          ["name" => "turret", "location" => "top"]
+          ["type" => "pilot"],
+          ["type" => "co-pilot"],
+          ["type" => "turret", "location" => "top"]
         ]
       ]
     ];
@@ -65,7 +65,7 @@ class ShipsTableSeeder extends Seeder
         foreach ($ship as $positionIndex => $position) {
           \App\ShipPosition::insert([
             "ship" => $temp,
-            "position" => Position::where("name", $ship["name"])->where("location", isset($ship["location"]) ? $ship['location'] : null)->first()->id
+            "position" => Position::where("type", $ship["type"])->where("location", isset($ship["location"]) ? $ship['location'] : null)->first()->id
           ]);
         }
       }
