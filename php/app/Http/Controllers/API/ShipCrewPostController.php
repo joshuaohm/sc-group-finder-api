@@ -100,7 +100,9 @@ class ShipCrewPostController extends BaseController
     $validator = Validator::make($input, [
       'description' => 'required',
       'ship_id' => 'required|numeric|min:1',
-      'members' => 'required'
+      'members' => 'required',
+      'startBody' => 'required',
+      'miscCrew' => 'required|numeric'
     ]);
 
     if ($validator->fails()) {
@@ -218,5 +220,29 @@ class ShipCrewPostController extends BaseController
     $scPost->save();
 
     return $this->sendResponse([], 'Ship Crew Post deleted successfully.');
+  }
+
+  public function requestPosition(Request $request)
+  {
+    $input = $request->all();
+
+    /* Input Validation */
+    $validator = Validator::make($input, [
+      'description' => 'required',
+      'ship_id' => 'required|numeric|min:1',
+      'members' => 'required'
+    ]);
+
+    if ($validator->fails()) {
+      return $this->sendError('Validation Error.', $validator->errors());
+    }
+
+
+    /* User Validation */
+    $user = auth()->guard('api')->user();
+
+    if (!$user || !$user->id || !$user->name) {
+      return $this->sendError('Validation Error.', "Poster information was missing.");
+    }
   }
 }
