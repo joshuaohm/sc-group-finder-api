@@ -19,10 +19,11 @@ class Ship extends JsonResource
    */
   public function toArray($request)
   {
+    $shipPositions =  ShipPosition::where('ship', $this->id)->get()->position;
     return [
       'manufacturer' => $this->manufacturer,
       'name' => $this->name,
-      'crewPositions' => new PositionResource::collection(Position::whereIn('id', ShipPosition::where('ship', $this->id)->get()->position)->get())
+      'crewPositions' => new PositionResource::collection(Position::whereIn('id', $shipPositions)->get())
     ];
   }
 }
