@@ -62,7 +62,11 @@ class ShipsTableSeeder extends Seeder
           "name" => $shipIndex
         ]);
 
+        echo var_dump($ship);
+
         for ($i = 0; $i < count($ship); $i++) {
+
+          echo var_dump($ship[$i]);
           \App\ShipPosition::insert([
             "ship" => $temp,
             "position" => Position::where("type", $ship[$i]["type"])->where("location", isset($ship[$i]["location"]) ? $ship[$i]["location"] : null)->first()->id
