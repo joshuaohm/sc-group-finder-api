@@ -21,8 +21,8 @@ class Ship extends JsonResource
     $shipPositions =  ShipPosition::where('ship', $this->id)->position->get();
     $positions = Position::whereIn('id', $shipPositions)->get();
 
-    var_dump($shipPositions);
-    var_dump($positions);
+    echo var_dump($shipPositions);
+    echo var_dump($positions);
 
     $crewPositions = new PositionResource::collection($positions);
 
