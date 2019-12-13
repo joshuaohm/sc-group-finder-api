@@ -228,9 +228,9 @@ class ShipCrewPostController extends BaseController
 
     /* Input Validation */
     $validator = Validator::make($input, [
-      'description' => 'required',
+      'post_id' => 'required|numeric|min:1',
       'ship_id' => 'required|numeric|min:1',
-      'members' => 'required'
+      'requested_position' => 'required',
     ]);
 
     if ($validator->fails()) {
@@ -244,5 +244,7 @@ class ShipCrewPostController extends BaseController
     if (!$user || !$user->id || !$user->name) {
       return $this->sendError('Validation Error.', "Poster information was missing.");
     }
+
+    $currentPositions = json_decode(ShipCrewPost::where('id', htmlspecialchars($input['post_id']))->first()->members, true);
   }
 }
