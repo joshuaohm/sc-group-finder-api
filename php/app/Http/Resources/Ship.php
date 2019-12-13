@@ -18,10 +18,8 @@ class Ship extends JsonResource
    */
   public function toArray($request)
   {
-    $shipPositions =  ShipPosition::where('ship', $this->id)->get()->only(['position']);
-    $positions = Position::whereIn('id', $shipPositions);
-
-
+    $shipPositions =  ShipPosition::select('position')->where('ship', $this->id)->get();
+    $positions = Position::whereIn('id', $shipPositions)->get();
 
     $crewPositions = PositionResource::collection($positions);
 

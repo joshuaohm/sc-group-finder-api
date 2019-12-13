@@ -14,6 +14,11 @@ class Location extends JsonResource
    */
   public function toArray($request)
   {
-    return parent::toArray($request);
+    return [
+      'id' => $this->id,
+      'parent' => $this->parent,
+      'name' => $this->name,
+      'type' => $this->type,
+    ];
   }
 }

@@ -29,9 +29,7 @@ class ShipCrewPosition extends JsonResource
       'post' => $this->post,
       'user' => new UserResource(User::where('id', $this->user)->first()),
       'requested' => $this->requested,
-      'filled' => $this->filled,
-      'created_at' => $this->created_at->format('d/m/Y'),
-      'updated_at' => $this->updated_at->format('d/m/Y'),
+      'filled' => $this->filled
     ];
   }
 }
