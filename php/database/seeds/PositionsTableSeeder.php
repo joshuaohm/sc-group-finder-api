@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\ShipPosition;
+use App\Position;
 
-class ShipPositionsTableSeeder extends Seeder
+class PositionsTableSeeder extends Seeder
 {
   /**
    * Seed the application's database.
@@ -32,7 +32,7 @@ class ShipPositionsTableSeeder extends Seeder
         if (($type === 'misc' && $miscFlag)
           || $type != 'misc'
         ) {
-          \App\ShipPosition::insert([
+          \App\Position::insert([
             'type' => $type,
             'position' => $position
           ]);

@@ -16,7 +16,7 @@ class CreateShipCrewPositionsTable extends Migration
     Schema::create('ship_crew_positions', function (Blueprint $table) {
       $table->bigIncrements('id');
       $table->bigInteger('type')->unsigned();
-      $table->bigInteger('post')->unsigned();
+      $table->bigInteger('post')->unsigned()->nullable();
       $table->bigInteger('ship')->unsigned();
       $table->bigInteger('user')->unsigned()->nullable();
       $table->boolean('requested')->default(false);
@@ -27,7 +27,7 @@ class CreateShipCrewPositionsTable extends Migration
     Schema::table('ship_crew_positions', function ($table) {
       $table->foreign('post')->references('id')->on('ship_crew_posts');
       $table->foreign('ship')->references('id')->on('ships');
-      $table->foreign('type')->references('id')->on('ship_positions';)
+      $table->foreign('type')->references('id')->on('positions');
       $table->foreign('user')->references('id')->on('users');
     });
   }

@@ -15,9 +15,14 @@ class CreateShipPositionsTable extends Migration
   {
     Schema::create('ship_positions', function (Blueprint $table) {
       $table->bigIncrements('id');
-      $table->string('type');
-      $table->string('position')->nullable();
+      $table->bigInteger('ship')->unsigned();
+      $table->bigInteger('position')->unsigned();
       $table->timestamps();
+    });
+
+    Schema::table('ship_positions', function ($table) {
+      $table->foreign('ship')->references('id')->on('ships');
+      $table->foreign('position')->references('id')->on('positions');
     });
   }
 

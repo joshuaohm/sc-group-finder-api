@@ -25,8 +25,8 @@ class ShipCrewPosition extends JsonResource
     return [
       'id' => $this->id,
       'type' => new ShipPositionResource(ShipPosition::where('id', $this->type)->first()),
-      'ship' => new ShipResource(Ship::where('id', $this->ship)->first()->id),
-      'post' => new ShipCrewPostResource(ShipCrewPost::where('id', $this->post)->first()->id),
+      'ship' => $this->ship,
+      'post' => $this->post,
       'user' => new UserResource(User::where('id', $this->user)->first()),
       'requested' => $this->requested,
       'filled' => $this->filled,

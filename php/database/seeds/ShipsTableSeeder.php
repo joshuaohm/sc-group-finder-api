@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Ship;
+use App\Position;
+use App\ShipPosition;
 
 class ShipsTableSeeder extends Seeder
 {
@@ -13,68 +15,56 @@ class ShipsTableSeeder extends Seeder
   public function run()
   {
 
-    /** BEGIN AEGIS **/
+    $temp = 0;
 
-    \App\Ship::insert([
-      'manufacturer' => 'Aegis',
-      'name' => 'Avenger Stalker',
-      'crewPositions' => json_encode([['type' => 'pilot']]),
-    ]);
+    $ships = [
+      'Aegis' => [
+        'Avenger Stalker' => ['type' => 'pilot'],
+        'Avenger Titan' => ['type' => 'pilot'],
+        'Avenger Warlock' => ['type' => 'pilot'],
+        'Eclipse' => ['type' => 'pilot'],
+        'Gladius' => [
+          ['type' => 'pilot'],
+          ['type' => 'turret', 'location' => 'top']
+        ],
+        'Hammerhead' => [
+          ['type' => 'pilot'],
+          ['type' => 'co-pilot'],
+          ['type' => 'turret', 'location' => 'frontLeft'],
+          ['type' => 'turret', 'location' => 'frontRight'],
+          ['type' => 'turret', 'location' => 'backLeft'],
+          ['type' => 'turret', 'location' => 'backRight'],
+          ['type' => 'turret', 'location' => 'top'],
+          ['type' => 'turret', 'location' => 'bottom'],
+        ]
+      ],
+      'Drake' => [
+        'Buccaneer' => [
+          ['type' => 'pilot']
+        ],
+        'Cutlass Black' => [
+          ['type' => 'pilot'],
+          ['type' => 'co-pilot'],
+          ['type' => 'turret', 'location' => 'top']
+        ]
+      ]
+    ];
 
-    \App\Ship::insert([
-      'manufacturer' => 'Aegis',
-      'name' => 'Avenger Titan',
-      'crewPositions' => json_encode([['type' => 'pilot']]),
-    ]);
+    foreach ($ships as $manuIndex => $manufacturer) {
+      foreach ($manufacturer as $shipIndex => $ship) {
 
-    \App\Ship::insert([
-      'manufacturer' => 'Aegis',
-      'name' => 'Avenger Warlock',
-      'crewPositions' => json_encode([['type' => 'pilot']]),
-    ]);
+        $temp = \App\Ship::insert([
+          'manufacturer' => $manuIndex,
+          'name' => $shipIndex
+        ])->id;
 
-    \App\Ship::insert([
-      'manufacturer' => 'Aegis',
-      'name' => 'Eclipse',
-      'crewPositions' => json_encode([['type' => 'pilot']]),
-    ]);
-
-    \App\Ship::insert([
-      'manufacturer' => 'Aegis',
-      'name' => 'Gladius',
-      'crewPositions' => json_encode([['type' => 'pilot']]),
-    ]);
-
-    \App\Ship::insert([
-      'manufacturer' => 'Aegis',
-      'name' => 'Hammerhead',
-      'crewPositions' => json_encode([
-        ['type' => 'pilot'],
-        ['type' => 'co-pilot'],
-        ['type' => 'turret', 'position' => 'frontLeft'],
-        ['type' => 'turret', 'position' => 'frontRight'],
-        ['type' => 'turret', 'position' => 'backLeft'],
-        ['type' => 'turret', 'position' => 'backRight'],
-        ['type' => 'turret', 'position' => 'top'],
-        ['type' => 'turret', 'position' => 'bottom'],
-      ]),
-    ]);
-
-    /** BEGIN DRAKE **/
-    \App\Ship::insert([
-      'manufacturer' => 'Drake',
-      'name' => 'Buccaneer',
-      'crewPositions' => json_encode([['type' => 'pilot']]),
-    ]);
-
-    \App\Ship::insert([
-      'manufacturer' => 'Drake',
-      'name' => 'Cutlass Black',
-      'crewPositions' => json_encode([
-        ['type' => 'pilot'],
-        ['type' => 'co-pilot'],
-        ['type' => 'turret', 'position' => 'Top'],
-      ]),
-    ]);
+        foreach ($ship as $positionIndex => $position) {
+          \App\ShipPosition::insert([
+            'ship' => $temp,
+            'type' => Position::where('type', $position['type'])->where('location', $position['location'])->first()
+          ]);
+        }
+      }
+    }
   }
 }
