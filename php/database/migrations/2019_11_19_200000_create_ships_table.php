@@ -17,7 +17,6 @@ class CreateShipsTable extends Migration
       $table->bigIncrements('id');
       $table->string('manufacturer', 100)->nullable();
       $table->string('name', 100)->nullable();
-      $table->json('crewPositions')->nullable();
       $table->timestamps();
     });
   }
