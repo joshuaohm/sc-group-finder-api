@@ -13,6 +13,8 @@ class PositionsTableSeeder extends Seeder
   public function run()
   {
 
+    DB::table('positions')->delete();
+
     //Make sure misc is first, it needs id === 1
     $types = ['misc', 'pilot', 'co-pilot', 'turret', 'support'];
 
