@@ -14,7 +14,7 @@ class LocationController extends BaseController
    */
   public function index()
   {
-    $ret = Location::all()->orderBy('name', 'asc');
+    $ret = Location::orderBy('name', 'asc')->get();
 
     return $this->sendResponse(LocationResource::collection($ret), 'Locations retrieved successfully.');
   }
