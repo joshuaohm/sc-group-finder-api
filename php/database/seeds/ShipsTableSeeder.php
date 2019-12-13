@@ -23,10 +23,10 @@ class ShipsTableSeeder extends Seeder
 
     $ships = [
       "Aegis" => [
-        "Avenger Stalker" => ["type" => "pilot"],
-        "Avenger Titan" => ["type" => "pilot"],
-        "Avenger Warlock" => ["type" => "pilot"],
-        "Eclipse" => ["type" => "pilot"],
+        "Avenger Stalker" => [["type" => "pilot"]],
+        "Avenger Titan" => [["type" => "pilot"]],
+        "Avenger Warlock" => [["type" => "pilot"]],
+        "Eclipse" => [["type" => "pilot"]],
         "Gladius" => [
           ["type" => "pilot"],
           ["type" => "turret", "location" => "top"]
@@ -44,7 +44,7 @@ class ShipsTableSeeder extends Seeder
       ],
       "Drake" => [
         "Buccaneer" => [
-          ["type" => "pilot"]
+          [["type" => "pilot"]]
         ],
         "Cutlass Black" => [
           ["type" => "pilot"],
@@ -65,7 +65,7 @@ class ShipsTableSeeder extends Seeder
         for ($i = 0; $i < count($ship); $i++) {
           \App\ShipPosition::insert([
             "ship" => $temp,
-            "position" => Position::where("type", $ship[$i]["type"])->where("location", isset($ship[$i]["location"]) ? $ship[$i]['location'] : null)->first()->id
+            "position" => Position::where("type", $ship[$i]["type"])->where("location", isset($ship["location"]) ? $ship['location'] : null)->first()->id
           ]);
         }
       }
