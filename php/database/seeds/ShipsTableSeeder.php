@@ -65,7 +65,7 @@ class ShipsTableSeeder extends Seeder
         foreach ($ship as $positionIndex => $position) {
           \App\ShipPosition::insert([
             "ship" => $temp,
-            "position" => Position::where("name", $ship["name"])->where("location", $ship["location"])->first()->id
+            "position" => Position::where("name", $ship["name"])->where("location", isset($ship["location"]) ? $ship['location'] : null)->first()->id
           ]);
         }
       }
