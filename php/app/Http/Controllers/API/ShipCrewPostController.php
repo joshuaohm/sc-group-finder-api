@@ -10,6 +10,7 @@ use App\Ship;
 use App\User;
 use App\ShipCrewPosition;
 use App\ShipPosition;
+use App\Position;
 use App\Http\Resources\ShipCrewPost as ShipCrewPostResource;
 use App\Http\Resources\ShipCrewPosition as ShipCrewPositionResource;
 use App\Http\Resources\ShipPosition as ShipPositionResource;
@@ -17,55 +18,41 @@ use App\Http\Resources\ShipPosition as ShipPositionResource;
 class ShipCrewPostController extends BaseController
 {
 
-  //Iterates through crewPositions on a ship and creates assignable members slots for the post
-  private function createPositions($template, $requested, $userId, $userName)
+  //Iterates through Positions and posted ShipCrewPositions and creates actual ShipCrewPositions
+  private function createPositions($postedMembers)
   {
-    //Disable crewPositions or set creator to position
-    if (count($template, COUNT_RECURSIVE) == 1 && count($requested, COUNT_RECURSIVE) == 1) {
+    try {
 
-      $template[0]->enabled = true;
+      $shipCrewPositions = collect();
 
-      //Assign position to creator, or disable it
-      if (isset($requested[0]['member']) && $requested[0]['member']['id'] === "this") {
-        $template[0]['member']['id'] = $userId;
-        $template[0]['member']['name'] = $userName;
-      } else if (isset($requested[0]['enabled']) && $requested[0]['enabled'] === false)
-        $template[0]['enabled'] = false;
-    } else {
-      foreach ($template as $index => $crewPosition) {
+      foreach ($postedMembers as $positionIndex => $position) {
+        $shipCrewPosition = new ShipCrewPosition($position);
 
-        $crewPosition['enabled'] = true;
-        //Assign position to creator, or disable it
-        if (isset($requested[$index]['member']) && $requested[$index]['member']['id'] === "this") {
-          $crewPosition['member']['id'] = $userId;
-          $crewPosition['member']['name'] = $userName;
-        } else if (isset($requested[$index]['enabled']) && $requested[$index]['enabled'] === false) {
-          $crewPosition['enabled'] = false;
+        if ($shipCrewPosition)
+          $shipCrewPositions->push($shipCrewPosition);
+        else {
+          $shipCrewPositions = null;
+          break;
         }
-
-        if (!isset($crewPosition['member'])) {
-          $crewPosition['member']['id'] = 0;
-          $crewPosition['member']['name'] = "";
-        }
-
-        $template[$index] = $crewPosition;
       }
+      return $shipCrewPositions;
+    } catch (Exception $e) {
+      return null;
     }
-
-    return $template;
   }
 
-  private function createMiscCrewPositions($miscCrew)
+  private function createMiscCrewPositions($miscCrew, $ship)
   {
-    $temp = null;
-    if (isset($miscCrew))
+    $temp = collect();
+
+    if (isset($miscCrew) && is_numeric($miscCrew)) {
       for ($i = 0; $i < $miscCrew; $i++) {
-        $new = new \stdClass();
-        $new->member = new \stdClass();
-        $new->member->id = 0;
-        $new->member->name = '';
-        $temp[$i] = $new;
+        $new = new ShipCrewPosition;
+        $new->position = 1;
+        $new->ship = $ship;
+        $temp->push($new);
       }
+    } else return null;
 
     return $temp;
   }
@@ -127,46 +114,50 @@ class ShipCrewPostController extends BaseController
     $targetLocation = 0;
 
     if (isset($input['startZone'])) {
-      $startLocation = $input['startZone'];
+      $startLocation = htmlspecialchars($input['startZone']);
     } else if (isset($input['startBody'])) {
-      $startLocation = $input['startBody'];
+      $startLocation = htmlspecialchars($input['startBody']);
     }
     if (isset($input['targetZone'])) {
-      $targetLocation = $input['targetZone'];
+      $targetLocation = htmlspecialchars($input['targetZone']);
     } else if (isset($input['targetBody'])) {
-      $targetLocation = $input['targetBody'];
+      $targetLocation = htmlspecialchars($input['targetBody']);
     }
 
     /* Create Ship Crew Positions */
-    $postedMembers = ShipCrewPositionResource::collection(json_decode($input['members'], true));
 
+    $postedMembers = json_decode($input['members'], true);
+    $shipPositions =  ShipPosition::select('position')->where('ship', htmlspecialchars($input['ship_id']))->get();
+    $positions = Position::whereIn('id', $shipPositions)->get();
 
+    $shipCrewPositions = $this->createPositions($postedMembers, $positions);
 
-    echo var_dump($postedMembers);
-
-
-    if (!$postedMembers || !$postedShip || !$shipPositions) {
-      return $this->sendError('Validation Error.', "Ship information was missing.");
+    if (!$shipCrewPositions) {
+      return $this->sendError('Validation Error.', "Crew Position information was missing.");
     }
-    /*
-    $postedShip = Ship::where('id', htmlspecialchars($input['ship_id']))->first();
-    $shipPositions = json_decode($postedShip->crewPositions, true);
 
+    $miscCrew = isset($input['miscCrew']) ? $this->createMiscCrewPositions($input['miscCrew'], htmlspecialchars($input['ship_id'])) : null;
 
-
-    $shipPositions = $this->createPositions($shipPositions, $postedMembers, $user->id, $user->name);
-
-    $miscCrew = isset($input['miscCrew']) ? $this->createMiscCrewPositions($input['miscCrew']) : null;
+    if (!$miscCrew) {
+      return $this->sendError('Validation Error.', "Misc Crew information was missing.");
+    }
 
     $scPost = ShipCrewPost::create([
       'description' => htmlspecialchars($input['description']),
-      'ship_id'     => $postedShip->id,
+      'ship_id'     => htmlspecialchars($input['ship_id']),
       'creator_id'  => $user->id,
       'startLocation' => $startLocation > 0 ? $startLocation : null,
       'targetLocation' => $targetLocation > 0 ? $targetLocation : null,
-      'members'     => json_encode($shipPositions, true),
-      'miscCrew'    => json_encode($miscCrew, true)
     ]);
+
+    foreach ($shipCrewPositions as $scpIndex => $position) {
+      echo var_dump($position) . "\n";
+    }
+
+    return $this->sendError('Validation Error.', "Test.");
+    /*
+
+
 
     return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
     */
