@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Ship;
 use App\ShipCrewPost;
 use App\User;
-use App\ShipPosition
+use App\ShipPosition;
 use App\Http\Resources\Ship as ShipResource;
 use App\Http\Resources\ShipCrewPost as ShipCrewPostResource;
 use App\Http\Resources\User as UserResource;

@@ -4,11 +4,15 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
+use Validator;
 use App\ShipCrewPost;
 use App\Ship;
 use App\User;
-use Validator;
+use App\ShipCrewPosition;
+use App\ShipPosition;
 use App\Http\Resources\ShipCrewPost as ShipCrewPostResource;
+use App\Http\Resources\ShipCrewPosition as ShipCrewPositionResource;
+use App\Http\Resources\ShipPosition as ShipPositionResource;
 
 class ShipCrewPostController extends BaseController
 {
@@ -134,13 +138,21 @@ class ShipCrewPostController extends BaseController
     }
 
     /* Create Ship Crew Positions */
-    $postedMembers = json_decode($input['members'], true);
-    $postedShip = Ship::where('id', htmlspecialchars($input['ship_id']))->first();
-    $shipPositions = json_decode($postedShip->crewPositions, true);
+    $postedMembers = ShipCrewPositionResource::collection(json_decode($input['members'], true));
+
+
+
+    echo var_dump($postedMembers);
+
 
     if (!$postedMembers || !$postedShip || !$shipPositions) {
       return $this->sendError('Validation Error.', "Ship information was missing.");
     }
+    /*
+    $postedShip = Ship::where('id', htmlspecialchars($input['ship_id']))->first();
+    $shipPositions = json_decode($postedShip->crewPositions, true);
+
+
 
     $shipPositions = $this->createPositions($shipPositions, $postedMembers, $user->id, $user->name);
 
@@ -157,6 +169,7 @@ class ShipCrewPostController extends BaseController
     ]);
 
     return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
+    */
   }
 
   /**
