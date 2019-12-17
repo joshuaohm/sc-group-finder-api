@@ -19,7 +19,7 @@ class ShipCrewPostController extends BaseController
 {
 
   //Iterates through Positions and posted ShipCrewPositions and creates actual ShipCrewPositions
-  private function createPositions($postedMembers)
+  private function createPositions($postedMembers, $positions)
   {
     try {
 
@@ -55,6 +55,33 @@ class ShipCrewPostController extends BaseController
     } else return null;
 
     return $temp;
+  }
+
+  private function validatePositions($scPositions, $positions)
+  {
+
+    if ($scPositions->count() !== $positions->count())
+      return false;
+
+    $scPositions = $scPositions->sortBy('type');
+    $positions = $positions->sortBy('type');
+
+    for ($i = 0; $i < $scPositions->count(); $i++) {
+
+      if ($scPositions[$i]->type !== $scPositions[$i]->type) {
+        return false;
+        break;
+      }
+
+      if ((isset($scPositions[$i]->location) && isset($positions[$i]->location)) && $scPositions[$i]->location !== $positions[$i]->location) {
+        return false;
+        break;
+      }
+
+      $scPositions[$i]->position = $positions[$i]->id;
+    }
+
+    return true;
   }
 
   /**
@@ -132,7 +159,7 @@ class ShipCrewPostController extends BaseController
 
     $shipCrewPositions = $this->createPositions($postedMembers, $positions);
 
-    if (!$shipCrewPositions) {
+    if (!$shipCrewPositions || !$this->validatePositions($shipCrewPositions, $positions)) {
       return $this->sendError('Validation Error.', "Crew Position information was missing.");
     }
 
@@ -150,8 +177,15 @@ class ShipCrewPostController extends BaseController
       'targetLocation' => $targetLocation > 0 ? $targetLocation : null,
     ]);
 
-    foreach ($shipCrewPositions as $scpIndex => $position) {
-      echo var_dump($position) . "\n";
+    foreach ($shipCrewPositions as $index => $position) {
+      echo "zposition: " . $position->position . "\n";
+      $newPosition = ShipCrewPosition::create([
+        'position' => $position->position,
+        'post' => $scPost->id,
+        'user' => $user->id,
+        'requested' => $position->requested ? $position->requested : false,
+        'filled' => $position->filled ? $position->filled : false,
+      ]);
     }
 
     return $this->sendError('Validation Error.', "Test.");

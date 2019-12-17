@@ -15,9 +15,9 @@ class CreateShipCrewPositionsTable extends Migration
   {
     Schema::create('ship_crew_positions', function (Blueprint $table) {
       $table->bigIncrements('id');
-      $table->bigInteger('position')->unsigned();
+      $table->bigInteger('position')->unsigned()->nullable();
       $table->bigInteger('post')->unsigned()->nullable();
-      $table->bigInteger('ship')->unsigned();
+      $table->bigInteger('ship')->unsigned()->nullable();
       $table->bigInteger('user')->unsigned()->nullable();
       $table->boolean('requested')->default(false);
       $table->boolean('filled')->default(false);
