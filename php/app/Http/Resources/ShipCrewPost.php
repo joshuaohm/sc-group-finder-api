@@ -8,6 +8,8 @@ use App\Ship;
 use App\Location;
 use App\User;
 use App\ShipCrewPosition;
+use App\Position;
+use App\ShipPosition;
 use App\Http\Resources\Ship as ShipResource;
 use App\Http\Resources\Location as LocationResource;
 use App\Http\Resources\User as UserResource;
@@ -65,8 +67,12 @@ class ShipCrewPost extends JsonResource
    */
   public function toArray($request)
   {
-    $members = new ShipCrewPositionResource(ShipCrewPosition::where('post', $this->id)->where('type', '!=', 1)->get());
-    $miscCrew = new ShipCrewPositionResource(ShipCrewPosition::where('post', $this->id)->where('type', 1)->get());
+    $positions = Position::whereIn('id', ShipPosition::select('id')->where('ship', $this->ship)->get())->get();
+
+    $normalIds = $positions::select('id')->where('type' '!=', 1)->get();
+    $miscIds = $positions::select('id')->where('type', 1)->get();
+    $members = new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $normalIds)->get());
+    $miscCrew = new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $miscIds)->get());
 
     return [
       'id' => $this->id,

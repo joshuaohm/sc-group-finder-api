@@ -182,17 +182,20 @@ class ShipCrewPostController extends BaseController
       foreach ($shipCrewPositions as $index => $position) {
         $pos = $position->position;
         $ship = $scPost->ship_id;
+        $newPosition = null;
 
-        $newPosition = ShipCrewPosition::create([
-          'post' => $scPost->id,
-          'user' => $position->user && $position->user->id ? $position->user->id : null,
-          'requested' => $position->requested ? $position->requested : false,
-          'filled' => $position->filled ? $position->filled : false,
-        ]);
+        if ($position->enabled) {
+          $newPosition = ShipCrewPosition::create([
+            'post' => $scPost->id,
+            'user' => $position->user && $position->user->id ? $position->user->id : null,
+            'requested' => false,
+            'filled' => $position->user && $position->user->id && $position->user->id > 0 ? true : false,
+          ]);
 
-        $newPosition->ship = $ship;
-        $newPosition->position = $pos;
-        $newPosition->save();
+          $newPosition->ship = $ship;
+          $newPosition->position = $pos;
+          $newPosition->save();
+        }
       }
       return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
     } catch (Exception $e) {
