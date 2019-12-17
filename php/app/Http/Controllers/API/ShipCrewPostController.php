@@ -177,24 +177,27 @@ class ShipCrewPostController extends BaseController
       'targetLocation' => $targetLocation > 0 ? $targetLocation : null,
     ]);
 
-    foreach ($shipCrewPositions as $index => $position) {
-      echo "zposition: " . $position->position . "\n";
-      $newPosition = ShipCrewPosition::create([
-        'position' => $position->position,
-        'post' => $scPost->id,
-        'user' => $user->id,
-        'requested' => $position->requested ? $position->requested : false,
-        'filled' => $position->filled ? $position->filled : false,
-      ]);
+    try {
+
+      foreach ($shipCrewPositions as $index => $position) {
+        $pos = $position->position;
+        $ship = $scPost->ship_id;
+
+        $newPosition = ShipCrewPosition::create([
+          'post' => $scPost->id,
+          'user' => $user->id,
+          'requested' => $position->requested ? $position->requested : false,
+          'filled' => $position->filled ? $position->filled : false,
+        ]);
+
+        $newPosition->ship = $ship;
+        $newPosition->position = $pos;
+        $newPosition->save();
+      }
+      return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
+    } catch (Exception $e) {
+      return $this->sendError('Validation Error.', "Crew Position information was invalid.");
     }
-
-    return $this->sendError('Validation Error.', "Test.");
-    /*
-
-
-
-    return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
-    */
   }
 
   /**
