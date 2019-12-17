@@ -26,13 +26,16 @@ class ShipCrewPostController extends BaseController
       $shipCrewPositions = collect();
 
       foreach ($postedMembers as $positionIndex => $position) {
-        $shipCrewPosition = new ShipCrewPosition($position);
 
-        if ($shipCrewPosition)
-          $shipCrewPositions->push($shipCrewPosition);
-        else {
-          $shipCrewPositions = null;
-          break;
+        if ($position->enabled) {
+          $shipCrewPosition = new ShipCrewPosition($position);
+
+          if ($shipCrewPosition)
+            $shipCrewPositions->push($shipCrewPosition);
+          else {
+            $shipCrewPositions = null;
+            break;
+          }
         }
       }
       return $shipCrewPositions;
@@ -184,18 +187,16 @@ class ShipCrewPostController extends BaseController
         $ship = $scPost->ship_id;
         $newPosition = null;
 
-        if ($position->enabled) {
-          $newPosition = ShipCrewPosition::create([
-            'post' => $scPost->id,
-            'user' => $position->user && $position->user->id ? $position->user->id : null,
-            'requested' => false,
-            'filled' => $position->user && $position->user->id && $position->user->id > 0 ? true : false,
-          ]);
+        $newPosition = ShipCrewPosition::create([
+          'post' => $scPost->id,
+          'user' => $position->user && $position->user->id ? $position->user->id : null,
+          'requested' => false,
+          'filled' => $position->user && $position->user->id && $position->user->id > 0 ? true : false,
+        ]);
 
-          $newPosition->ship = $ship;
-          $newPosition->position = $pos;
-          $newPosition->save();
-        }
+        $newPosition->ship = $ship;
+        $newPosition->position = $pos;
+        $newPosition->save();
       }
       return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
     } catch (Exception $e) {
