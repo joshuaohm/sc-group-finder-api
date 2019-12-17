@@ -70,13 +70,15 @@ class ShipCrewPost extends JsonResource
     $positions = Position::whereIn('id', ShipPosition::select('id')->where('ship', $this->ship)->get());
     $normalIds = $positions->select('id')->where('type', '!=', 1)->get();
     $miscIds = $positions->select('id')->where('type', 1)->get();
+    $members = new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $normalIds));
+    $miscCrew = new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $miscIds));
 
     return [
       'id' => $this->id,
       'description' => $this->description,
       'ship' => new ShipResource(Ship::where('id', $this->ship_id)->first()),
-      'members' => new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $normalIds)),
-      'miscCrew' => new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $miscIds)),
+      'members' => $members,
+      'miscCrew' => $miscCrew,
       'creator' =>  User::where('id', $this->creator_id)->first(),
       'gameMode' => $this->parseGameMode($this->gameMode),
       'startLocation' => new LocationResource(Location::where('id', $this->startLocation)->first()),
