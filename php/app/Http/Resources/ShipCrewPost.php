@@ -28,7 +28,7 @@ class ShipCrewPost extends JsonResource
     $filled = 0;
 
     $total = $members->count() + $miscCrew->count();
-    $filled = $members::where('filled', true)->count() + $miscCrew::where('filled', true)->count();
+    $filled = $members->where('filled', true)->count() + $miscCrew->where('filled', true)->count();
 
     return $filled . "/" . $total;
   }
