@@ -29,13 +29,12 @@ class ShipCrewPostController extends BaseController
 
         if ($position['enabled']) {
           $shipCrewPosition = new ShipCrewPosition($position);
-
-          if ($shipCrewPosition)
-            $shipCrewPositions->push($shipCrewPosition);
-          else {
-            $shipCrewPositions = null;
-            break;
-          }
+        }
+        if ($shipCrewPosition)
+          $shipCrewPositions->push($shipCrewPosition);
+        else {
+          $shipCrewPositions = null;
+          break;
         }
       }
       return $shipCrewPositions;
