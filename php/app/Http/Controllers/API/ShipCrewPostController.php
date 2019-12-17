@@ -188,9 +188,9 @@ class ShipCrewPostController extends BaseController
 
         $newPosition = ShipCrewPosition::create([
           'post' => $scPost->id,
-          'user' => $position->user && $position->user->id ? $position->user->id : null,
+          'user' => $pos->user && $pos->user->id ? $pos->user->id : null,
           'requested' => false,
-          'filled' => $position->user && $position->user->id && $position->user->id > 0 ? true : false,
+          'filled' => $pos->user && $pos->user->id && $pos->user->id > 0 ? true : false,
         ]);
 
         $newPosition->ship = $ship;
