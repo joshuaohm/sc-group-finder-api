@@ -22,13 +22,16 @@ class ShipCrewPost extends JsonResource
     * Returns a string to indicate how many crewPositions are available in the post.
     *
     */
-  private function calculateAvailableSlots($members, $miscCrew)
+  private function calculateAvailableSlots($postId)
   {
     $total = 0;
     $filled = 0;
 
-    $total = $members->count() + $miscCrew->count();
-    $filled = $members->where('filled', true)->count() + $miscCrew->where('filled', true)->count();
+    $positions = ShipCrewPosition::where('post' $postId);
+
+    $total = $positions->count();
+
+    $filled = $positions->where('filled', true)->count();
 
     return $filled . "/" . $total;
   }
@@ -67,23 +70,23 @@ class ShipCrewPost extends JsonResource
    */
   public function toArray($request)
   {
-    $positions = Position::whereIn('id', ShipPosition::select('id')->where('ship', $this->ship)->get());
+    $shipPositions = ShipPosition::select('id')->where('ship', $this->ship)->get();
+    $positions = Position::whereIn('id', $shipPositions);
+
     $normalIds = $positions->select('id')->where('type', '!=', 1)->get();
     $miscIds = $positions->select('id')->where('type', 1)->get();
-    $members = new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $normalIds));
-    $miscCrew = new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $miscIds));
 
     return [
       'id' => $this->id,
       'description' => $this->description,
       'ship' => new ShipResource(Ship::where('id', $this->ship_id)->first()),
-      'members' => $members,
-      'miscCrew' => $miscCrew,
+      'members' => new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $normalIds)),
+      'miscCrew' => new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $miscIds)),
       'creator' =>  User::where('id', $this->creator_id)->first(),
       'gameMode' => $this->parseGameMode($this->gameMode),
       'startLocation' => new LocationResource(Location::where('id', $this->startLocation)->first()),
       'targetLocation' => new LocationResource(Location::where('id', $this->targetLocation)->first()),
-      'slotsAvailable' => $this->calculateAvailableSlots($members, $miscCrew),
+      'slotsAvailable' => $this->calculateAvailableSlots($this->id),
       'created_at' => $this->created_at->format('d/m/Y'),
       'updated_at' => $this->updated_at->format('d/m/Y'),
     ];
