@@ -27,7 +27,7 @@ class ShipCrewPost extends JsonResource
     $total = 0;
     $filled = 0;
 
-    $positions = ShipCrewPosition::where('post' $postId);
+    $positions = ShipCrewPosition::where('post', $postId);
 
     $total = $positions->count();
 
