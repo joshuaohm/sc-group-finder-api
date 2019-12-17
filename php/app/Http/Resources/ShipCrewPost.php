@@ -67,7 +67,7 @@ class ShipCrewPost extends JsonResource
    */
   public function toArray($request)
   {
-    $positions = Position::whereIn('id', ShipPosition::select('id')->where('ship', $this->ship)->get())->get();
+    $positions = Position::whereIn('id', ShipPosition::select('id')->where('ship', $this->ship)->get());
 
     $normalIds = $positions::select('id')->where('type', '!=', 1)->get();
     $miscIds = $positions::select('id')->where('type', 1)->get();
