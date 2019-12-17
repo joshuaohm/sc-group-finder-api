@@ -27,7 +27,7 @@ class ShipCrewPostController extends BaseController
 
       foreach ($postedMembers as $positionIndex => $position) {
 
-        if ($position->enabled) {
+        if ($position['enabled']) {
           $shipCrewPosition = new ShipCrewPosition($position);
 
           if ($shipCrewPosition)
