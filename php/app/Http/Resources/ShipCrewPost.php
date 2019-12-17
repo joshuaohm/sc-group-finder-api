@@ -76,6 +76,9 @@ class ShipCrewPost extends JsonResource
     $normalIds = $positions->select('id')->where('type', '!=', 1)->get();
     $miscIds = $positions->select('id')->where('type', 1)->get();
 
+    echo print_r($normalIds);
+    echo print_r($miscIds);
+
     return [
       'id' => $this->id,
       'description' => $this->description,

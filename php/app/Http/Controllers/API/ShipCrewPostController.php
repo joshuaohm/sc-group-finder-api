@@ -19,7 +19,7 @@ class ShipCrewPostController extends BaseController
 {
 
   //Iterates through Positions and posted ShipCrewPositions and creates actual ShipCrewPositions
-  private function createPositions($postedMembers, $positions)
+  private function createPositions($postedMembers, $ship, $post)
   {
     try {
 
@@ -28,33 +28,53 @@ class ShipCrewPostController extends BaseController
       foreach ($postedMembers as $positionIndex => $position) {
 
         if ($position['enabled']) {
-          $shipCrewPosition = new ShipCrewPosition($position);
+
+          $newPosition = null;
+
+          $newPosition = ShipCrewPosition::create([
+            'post' => $post,
+            'user' => $position['user'] && $position['user']['id'] ? $position['user']['id'] : null,
+            'requested' => false,
+            'filled' => $position['user'] && $position['user']['id'] && $position['user']['id'] > 0 ? true : false,
+          ]);
+
+          $newPosition->ship = $ship;
+          $newPosition->position = htmlspecialchars($position['id']);
+          $newPosition->save();
         }
-        if ($shipCrewPosition)
-          $shipCrewPositions->push($shipCrewPosition);
+        if ($newPosition)
+          $shipCrewPositions->push($newPosition);
         else {
-          $shipCrewPositions = null;
-          break;
+          return false;
         }
       }
       return $shipCrewPositions;
     } catch (Exception $e) {
-      return null;
+      return false;
     }
   }
 
-  private function createMiscCrewPositions($miscCrew, $ship)
+  private function createMiscCrewPositions($miscCrew, $ship, $post)
   {
     $temp = collect();
 
-    if (isset($miscCrew) && is_numeric($miscCrew)) {
+    if (isset($miscCrew) && is_numeric($miscCrew) && isset($ship) && isset($post)) {
       for ($i = 0; $i < $miscCrew; $i++) {
-        $new = new ShipCrewPosition;
-        $new->position = 1;
-        $new->ship = $ship;
-        $temp->push($new);
+
+        $newPosition = ShipCrewPosition::create([
+          'post' => $post,
+          'user' => null,
+          'requested' => false,
+          'filled' => false,
+        ]);
+
+        $newPosition->ship = $ship;
+        $newPosition->position = 1;
+        $newPosition->save();
+
+        $temp->push($newPosition);
       }
-    } else return null;
+    } else return false;
 
     return $temp;
   }
@@ -159,18 +179,6 @@ class ShipCrewPostController extends BaseController
     $shipPositions =  ShipPosition::select('position')->where('ship', htmlspecialchars($input['ship_id']))->get();
     $positions = Position::whereIn('id', $shipPositions)->get();
 
-    $shipCrewPositions = $this->createPositions($postedMembers, $positions);
-
-    if (!$shipCrewPositions || !$this->validatePositions($shipCrewPositions, $positions)) {
-      return $this->sendError('Validation Error.', "Crew Position information was missing.");
-    }
-
-    $miscCrew = isset($input['miscCrew']) ? $this->createMiscCrewPositions($input['miscCrew'], htmlspecialchars($input['ship_id'])) : null;
-
-    if (!$miscCrew) {
-      return $this->sendError('Validation Error.', "Misc Crew information was missing.");
-    }
-
     $scPost = ShipCrewPost::create([
       'description' => htmlspecialchars($input['description']),
       'ship_id'     => htmlspecialchars($input['ship_id']),
@@ -179,26 +187,16 @@ class ShipCrewPostController extends BaseController
       'targetLocation' => $targetLocation > 0 ? $targetLocation : null,
     ]);
 
-    try {
+    $shipCrewPositions = $this->createPositions($postedMembers, $scPost->ship_id, $scPost->id);
+    $miscCrew = isset($input['miscCrew']) ? $this->createMiscCrewPositions($input['miscCrew'], $scPost->ship_id, $scPost->id) : null;
 
-      foreach ($shipCrewPositions as $index => $position) {
-        $pos = $position->position;
-        $ship = $scPost->ship_id;
-        $newPosition = null;
+    if (!$miscCrew) {
+      return $this->sendError('Validation Error.', "Misc Crew information was missing.");
+    }
 
-        $newPosition = ShipCrewPosition::create([
-          'post' => $scPost->id,
-          'user' => $pos->user && $pos->user->id ? $pos->user->id : null,
-          'requested' => false,
-          'filled' => $pos->user && $pos->user->id && $pos->user->id > 0 ? true : false,
-        ]);
-
-        $newPosition->ship = $ship;
-        $newPosition->position = $pos;
-        $newPosition->save();
-      }
+    if ($shipCrewPositions) {
       return $this->sendResponse(new ShipCrewPostResource($scPost), 'Ship Crew Post created successfully.');
-    } catch (Exception $e) {
+    } else {
       return $this->sendError('Validation Error.', "Crew Position information was invalid.");
     }
   }
