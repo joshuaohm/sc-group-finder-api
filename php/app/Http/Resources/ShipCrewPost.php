@@ -69,8 +69,8 @@ class ShipCrewPost extends JsonResource
   {
     $positions = Position::whereIn('id', ShipPosition::select('id')->where('ship', $this->ship)->get());
 
-    $normalIds = $positions::select('id')->where('type', '!=', 1)->get();
-    $miscIds = $positions::select('id')->where('type', 1)->get();
+    $normalIds = $positions->select('id')->where('type', '!=', 1)->get();
+    $miscIds = $positions->select('id')->where('type', 1)->get();
     $members = new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $normalIds)->get());
     $miscCrew = new ShipCrewPositionResource(ShipCrewPosition::whereIn('post', $miscIds)->get());
 
