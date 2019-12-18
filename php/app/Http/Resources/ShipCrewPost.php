@@ -70,21 +70,12 @@ class ShipCrewPost extends JsonResource
    */
   public function toArray($request)
   {
-    $shipPositions = ShipPosition::select('id')->where('ship', $this->ship)->get();
-    $positions = Position::whereIn('id', $shipPositions);
-
-    $normalIds = $positions->select('id')->where('type', '!=', 1)->get();
-    $miscIds = $positions->select('id')->where('type', 1)->get();
-
-    echo print_r($normalIds);
-    echo print_r($miscIds);
-
     return [
       'id' => $this->id,
       'description' => $this->description,
       'ship' => new ShipResource(Ship::where('id', $this->ship_id)->first()),
-      'members' => ShipCrewPositionResource::collection(ShipCrewPosition::whereIn('post', $normalIds)->get()),
-      'miscCrew' => ShipCrewPositionResource::collection(ShipCrewPosition::whereIn('post', $miscIds)->get()),
+      'members' => ShipCrewPositionResource::collection(ShipCrewPosition::where('post', $this->id)->where('position', '!=', 1)->get()),
+      'miscCrew' => ShipCrewPositionResource::collection(ShipCrewPosition::where('post', $this->id)->where('position', 1)->get()),
       'creator' =>  User::where('id', $this->creator_id)->first(),
       'gameMode' => $this->parseGameMode($this->gameMode),
       'startLocation' => new LocationResource(Location::where('id', $this->startLocation)->first()),

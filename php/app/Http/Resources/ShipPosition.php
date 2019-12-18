@@ -24,5 +24,4 @@ class ShipPosition extends JsonResource
       'ship' => new ShipResource(Ship::where('id', $this->ship)->first()),
     ];
   }
-  }
 }
