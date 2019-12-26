@@ -76,7 +76,7 @@ class ShipCrewPost extends JsonResource
       'ship' => new ShipResource(Ship::where('id', $this->ship_id)->first()),
       'members' => ShipCrewPositionResource::collection(ShipCrewPosition::where('post', $this->id)->where('position', '!=', 1)->get()),
       'miscCrew' => ShipCrewPositionResource::collection(ShipCrewPosition::where('post', $this->id)->where('position', 1)->get()),
-      'creator' =>  User::where('id', $this->creator_id)->first(),
+      'creator' =>  new UserResource(User::where('id', $this->creator_id)->first()),
       'gameMode' => $this->parseGameMode($this->gameMode),
       'startLocation' => new LocationResource(Location::where('id', $this->startLocation)->first()),
       'targetLocation' => new LocationResource(Location::where('id', $this->targetLocation)->first()),
