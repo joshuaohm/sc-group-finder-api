@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\User;
 use App\Http\Resources\User as UserResource;
+use App\Http\Position;
 use App\Http\Resources\Position as PositionResource;
 
 class ShipCrewPosition extends JsonResource
