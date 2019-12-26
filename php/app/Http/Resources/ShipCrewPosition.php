@@ -3,14 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Ship;
-use App\ShipCrewPost;
 use App\User;
-use App\ShipPosition;
-use App\Http\Resources\Ship as ShipResource;
-use App\Http\Resources\ShipCrewPost as ShipCrewPostResource;
 use App\Http\Resources\User as UserResource;
-use App\Http\Resources\ShipPosition as ShipPositionResource;
+use App\Http\Resources\Position as PositionResource;
 
 class ShipCrewPosition extends JsonResource
 {
@@ -24,7 +19,7 @@ class ShipCrewPosition extends JsonResource
   {
     return [
       'id' => $this->id,
-      'position' => $this->position,
+      'position' => new PositionResource(Position::where('id', $this->position)),
       'ship' => $this->ship,
       'post' => $this->post,
       'user' => new UserResource(User::where('id', $this->user)->first()),
