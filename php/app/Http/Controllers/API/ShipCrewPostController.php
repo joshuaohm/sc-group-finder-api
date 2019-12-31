@@ -270,7 +270,7 @@ class ShipCrewPostController extends BaseController
     /* User Validation */
     $user = auth()->guard('api')->user();
 
-    if (!$user || !$user->id || !$user->name || ($user->id !== htmlspecialchars($id))) {
+    if (!$user || !$user->id || !$user->name || ($user->id !== $id)) {
       return $this->sendError('Validation Error.', "User information was missing.");
     }
 
