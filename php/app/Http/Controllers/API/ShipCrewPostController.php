@@ -284,10 +284,10 @@ class ShipCrewPostController extends BaseController
     $input = $request->all();
 
     /* Input Validation */
-    $validator = Validator::make($input, [
-      'post_id' => 'required|numeric|min:1',
-      'ship_id' => 'required|numeric|min:1',
-      'requested_position' => 'required',
+    $validator = Validator::make($input['position'], [
+      'post' => 'required',
+      'position' => 'required',
+      'user' => 'required',
     ]);
 
     if ($validator->fails()) {
