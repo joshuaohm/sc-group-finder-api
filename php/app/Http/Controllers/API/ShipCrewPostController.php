@@ -264,6 +264,21 @@ class ShipCrewPostController extends BaseController
     return $this->sendResponse([], 'Ship Crew Post deleted successfully.');
   }
 
+  public function getUsersPosts($id)
+  {
+
+    /* User Validation */
+    $user = auth()->guard('api')->user();
+
+    if (!$user || !$user->id || !$user->name || ($user->id !== htmlspecialchars($id))) {
+      return $this->sendError('Validation Error.', "User information was missing.");
+    }
+
+    $scPosts = ShipCrewPost::where('isActive', true)->where('creator_id', $user->id)->get();
+
+    return $this->sendResponse(ShipCrewPostResource::collection($scPosts), 'Ship Crew Posts retrieved successfully.');
+  }
+
   public function requestPosition(Request $request)
   {
     $input = $request->all();

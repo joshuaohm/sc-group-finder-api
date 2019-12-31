@@ -22,6 +22,7 @@ Route::middleware('cors')->group(function () {
   Route::middleware('auth:api')->group(function () {
     Route::resource('posts/shipcrews', 'API\ShipCrewPostController');
     Route::resource('ships', 'API\ShipController');
+    Route::get('posts/shipcrews/user/{id}', 'API\ShipCrewPostController@getUsersPosts')
     Route::get('/locations/children/{id}/{type}', 'API\LocationController@showChildrenOfType');
     Route::get('/locations/children/{id}', 'API\LocationController@showChildren');
     Route::get('/locations/type/{id}', 'API\LocationController@showType');
