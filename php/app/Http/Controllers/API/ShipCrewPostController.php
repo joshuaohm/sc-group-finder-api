@@ -284,8 +284,8 @@ class ShipCrewPostController extends BaseController
     $input = $request->all();
 
     /* Input Validation */
-    $validator = Validator::make($input['position'], [
-      'post' => 'required',
+    $validator = Validator::make($input, [
+      'post' => 'required|numeric|min:1',
       'position' => 'required',
       'user' => 'required',
     ]);
@@ -294,14 +294,29 @@ class ShipCrewPostController extends BaseController
       return $this->sendError('Validation Error.', $validator->errors());
     }
 
+    $post = htmlspecialchars($input['post']);
+    $position = $input['position'];
+    $userObj = $input['user'];
 
     /* User Validation */
     $user = auth()->guard('api')->user();
 
-    if (!$user || !$user->id || !$user->name) {
-      return $this->sendError('Validation Error.', "Poster information was missing.");
+    if (!$user || !$user->id || !$user->name || $user->id != $userObj['id']) {
+      return $this->sendError('Validation Error.', "User information was invalid.");
     }
 
-    $currentPositions = json_decode(ShipCrewPost::where('id', htmlspecialchars($input['post_id']))->first()->members, true);
+    $scPos = ShipCrewPosition::where('post', $post)->where('position', $position['id'])->first();
+
+    if ($scPos->requested)
+      return $this->sendError('Error.', "Position has already been requested by someone else.");
+    if ($scPos->filled)
+      return $this->sendError('Error.', "Position has already been filled by someone else.");
+
+    $scPos->user = $user->id;
+    $scPos->requested = true;
+
+    $scPos->save();
+
+    return $this->sendResponse([$post, $position, $user, new ShipCrewPositionResource($scPos)], 'Made it to the end.');
   }
 }
