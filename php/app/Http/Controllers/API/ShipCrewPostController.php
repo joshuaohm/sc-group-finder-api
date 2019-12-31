@@ -270,8 +270,8 @@ class ShipCrewPostController extends BaseController
     /* User Validation */
     $user = auth()->guard('api')->user();
 
-    if (!$user || !$user->id || !$user->name || ($user->id !== $id)) {
-      return $this->sendError('Validation Error.', "User information was missing.");
+    if (!$user || !$user->id || !$user->name || ($user->id != $id)) {
+      return $this->sendError('Validation Error.', "User information was missing. " . $id . " " . $user->id);
     }
 
     $scPosts = ShipCrewPost::where('isActive', true)->where('creator_id', $user->id)->get();
